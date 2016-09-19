@@ -121,12 +121,7 @@ function Wort-CMakeVSInstall {
     }
 }
 
-function Wort-CMakeDefault {
-
-    Wort-DefaultDownload
-
-    Wort-DefaultExtract
-
+function Wort-CMakeDefaultPrepare {
     function Global:prepare {
         Push-Location $build_dir
         cmake -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo `
@@ -134,12 +129,28 @@ function Wort-CMakeDefault {
                        $src_dir
         Pop-Location
     }
-
+}
+function Wort-CMakeDefaultBuild {
     function Global:build {
         ninja -C $build_dir
     }
+}
+function Wort-CMakeDefaultInstall {
     function Global:install {
         ninja -C $build_dir install
     }
+}
+function Wort-CMakeDefault {
+
+    Wort-DefaultDownload
+
+    Wort-DefaultExtract
+
+    Wort-CMakeDefaultPrepare
+
+    Wort-CMakeDefaultBuild
+
+    Wort-CMakeDefaultInstall
+    
 }
 

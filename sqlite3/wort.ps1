@@ -26,6 +26,8 @@ function prepare {
     Push-Location $build_dir
     cmake -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo `
                    -DCMAKE_INSTALL_PREFIX="$install_dir" `
+                   -DWITH_SQLITE_RTREE=ON `
+                   -DWITH_SQLITE_UNLOCK_NOTIFY=ON `
                    $src_dir
     Pop-Location
 }
