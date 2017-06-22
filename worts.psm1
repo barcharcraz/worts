@@ -13,7 +13,7 @@ function Get-GitHubVersion {
     $release_info = Sort-Object -InputObject $release_info -Property published_at
     $latest = $release_info[0]
     $latest.tag_name -match $vermatcher > $null
-    [System.Management.Automation.SemanticVersion]::new($matches[0])
+    [version]($matches[0])
     
 
 }

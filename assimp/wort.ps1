@@ -13,7 +13,7 @@ Wort-CMakeVSBuild
 Wort-CMakeVSInstall
 function prepare {
     Push-Location $build_dir
-    cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_BUILD_TYPE=RelWithDebInfo `
+    cmake -G "Ninja" -DCMAKE_BUILD_TYPE=RelWithDebInfo `
                     -DASSIMP_BUILD_TESTS=False `
                     -DCMAKE_INSTALL_PREFIX="$install_dir" `
                     $src_dir
