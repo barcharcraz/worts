@@ -21,8 +21,8 @@ function Get-GitHubVersion {
 function Get-WortDefaults {
     param(
         [string]$base,
-        [string]$name,
-        [string]$version
+        [string]$name = $pkg_name,
+        [string]$version = $pkg_ver
     )
     $postfix = "$name\$version"
     $Global:pkg_name = $name
@@ -43,6 +43,14 @@ function Wort-DefaultInitialize {
         New-Item -ItemType Directory -Path $Global:src_dir -Force
         New-Item -ItemType Directory -Path $Global:build_dir -Force
         New-Item -ItemType Directory -Path $Global:install_dir -Force
+    }
+}
+function Wort-MultiVersion {
+    param(
+        $verInfo
+    )
+    $verInfo.GetEnumerator() | ForEach-Object {
+        New-Item -Force Variable:$($_.Name) -Value $_.Value
     }
 }
 function Wort-DefaultDownload {
