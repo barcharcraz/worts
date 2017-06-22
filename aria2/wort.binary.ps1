@@ -8,6 +8,8 @@ Get-WortDefaults $base "aria2" "1.26.0"
 
 $download = $(Join-Path $download_dir "aria2-1.26.0")
 
+Wort-DefaultInitialize
+
 Wort-DefaultDownload
 WOrt-DefaultExtract
 
@@ -20,4 +22,8 @@ function build {
 
 function install {
     Copy-Item -Recurse "$build_dir/*" "$install_dir"
+}
+
+function latest_version {
+    Get-GitHubVersion "aria2/aria2"
 }
