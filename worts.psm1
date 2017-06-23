@@ -20,17 +20,18 @@ function Get-GitHubVersion {
 
 function Get-WortDefaults {
     param(
-        [string]$base,
+        [string]$base = $WortConfig.Base,
         [string]$name = $pkg_name,
-        [string]$version = $pkg_ver
+        [string]$version = $pkg_ver,
+        [string]$varient = $pkg_varient
     )
-    $postfix = "$name\$version"
+    $postfix = "$name/$version-$varient"
     $Global:pkg_name = $name
     $Global:pkg_ver = $version
-    $Global:download_dir = "$base\download"
-    $Global:src_dir = "$base\source\$postfix"
-    $Global:build_dir = "$base\build\$postfix"
-    $Global:install_dir = "$base\pkgs\$postfix"
+    $Global:download_dir = "$base/download"
+    $Global:src_dir = "$base/source/$postfix"
+    $Global:build_dir = "$base/build/$postfix"
+    $Global:install_dir = "$base/pkgs/$postfix"
 
 
 }
@@ -55,10 +56,10 @@ function Wort-MultiVersion {
 }
 function Wort-DefaultDownload {
     $extension = [IO.Path]::GetExtension($url)
-    $Global:download = $(Join-Path $download_dir "$pkg_name-$pkg_ver$extension")
+    $Global:download = $(Join-Path $download_dir "$pkg_name-$pkg_ver-$pkg_varient$extension")
     function Global:download {
         Invoke-WebRequest $url -OutFile $download
-        if((Get-FileHash -Algorithm SHA256 $Global:download).Hash -ne $Global:hash) {
+        if((Get-FileHash -Algorithm SHA256 $Global:download).Hash -ne $Global:hash.ToUpper()) {
             throw "Error: File {0} failed verification" -f $Global:download
         }
     }
@@ -74,14 +75,24 @@ function Wort-AriaDownload {
 
 function Wort-DefaultExtract {
     function Global:extract {
-        Expand-Archive -Path $download -DestinationPath $src_dir
-        $children = Get-ChildItem $src_dir
-        Write-Output $children
+        if(Get-Command bsdtar -ErrorAction SilentlyContinue) {
+            Write-Information "Extracting with bsdtar"
+            bsdtar -C $src_dir -xf $download 
+        } elseif (Get-Command Expand-Archive -ErrorAction SilentlyContinue) {
+            Write-Information "Extracting with Expand-Archive"
+            Expand-Archive -Path $download -DestinationPath $src_dir
+        } else {
+            Write-Error "No extraction method found"
+        }
+        $children = Get-ChildItem -Force $src_dir
+        Write-Information $children
         if($children.Length -eq 1) {
             Write-Output "Moving Files from single subdirectory"
-            $dirname = $children[0].Name
-            Write-Output "$src_dir/$dirname/*"
-            Move-Item "$src_dir/$dirname/*" $src_dir
+            $dirname = $children[0].FullName
+            #Write-Output "$src_dir/$dirname/*"
+            Write-Debug $dirname
+            Get-ChildItem -Recurse -Force $dirname | Move-Item -Destination $src_dir
+            #Move-Item -Force "$src_dir/$dirname/.*" $src_dir
             Remove-Item $children[0].FullName
         }
     }
@@ -90,12 +101,12 @@ function Wort-DefaultExtract {
 
 function Wort-CMakeVSBuild {
     function Global:build {
-        msbuild $build_dir\ALL_BUILD.vcxproj /p:Configuration=RelWithDebInfo
+        msbuild $build_dir/ALL_BUILD.vcxproj /p:Configuration=RelWithDebInfo
     }
 }
 function Wort-CMakeVSInstall {
     function Global:install {
-        msbuild $build_dir\INSTALL.vcxproj /p:Configuration=RelWithDebInfo
+        msbuild $build_dir/INSTALL.vcxproj /p:Configuration=RelWithDebInfo
     }
 }
 

@@ -1,24 +1,4 @@
-Param(
-    [string]$base = $(Get-Location)
-)
-$versions = @{
-    "1.26.0" = {
-        $url = "https://github.com/aria2/aria2/releases/download/release-1.26.0/aria2-1.26.0-win-64bit-build1.zip"
-        $hash = "AE6070C5009D4964BA87863C23F8627A9E13C586941054B75B593D3C160AED5A"
-    }
-}
-$pkg_name = "arai2"
-$pkg_ver = "1.26.0"
-Get-WortDefaults $base
-. $versions."1.26.0"
-$download = $(Join-Path $download_dir "aria2-1.26.0")
-
-Wort-DefaultInitialize
-
-Wort-DefaultDownload
-WOrt-DefaultExtract
-
-function prepare {}
+. "$(Split-Path -parent $PSCommandPath)/wort.ps1"
 
 function build {
     New-Item -ItemType Directory "$build_dir/bin"
@@ -27,8 +7,4 @@ function build {
 
 function install {
     Copy-Item -Recurse "$build_dir/*" "$install_dir"
-}
-
-function latest_version {
-    Get-GitHubVersion "aria2/aria2"
 }
