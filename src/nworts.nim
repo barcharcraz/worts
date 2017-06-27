@@ -1,13 +1,15 @@
+{.experimental.}
 import os
 import strfmt
 import nakelib
 import semver
 import tables
-
-
+import hashes
+import macros
+import algorithm
 
 type PkgVer* = object
-    ver: Version
+    ver*: Version
     url*: string
     hash*: string
     #maybe add gpg signature
@@ -21,12 +23,21 @@ type PkgLayout* = object
 
 type Pkg* = object
     name*: string
-    vers*: OrderedTable[Version, PkgVer]
+    vers*: seq[PkgVer]
     license*: string
     rel*: int
     desc*: string
 
+type PkgInstall = object
+    pkg: Pkg
+    version: PkgVer
+    layout: PkgLayout
+
+
+
 var basedir = expandTilde("~/.worts")
+
+proc hash*(v: Version): Hash = hash($v)
 
 proc layout*(pkg: Pkg, ver: string): PkgLayout =
     var pkgdir = basedir / "pkg"
@@ -49,10 +60,19 @@ proc deleteDirs*(layout: PkgLayout) =
     removeDir layout.download_dir
     removeDir layout.src_dir
 
+proc wort_defaults*(p: Pkg): PkgInstall =
+    var p = p
+    p.vers.sort() do (x: auto, y: auto) -> int: cmp(x.ver, y.ver)
+    result.version = p.vers[0]
+    result.pkg = p
+    result.layout = layout(p, $p.vers[0].ver)
+
+
+#proc default_extract()
 
 
 template download*(body: untyped) = task("download", "download package sources or binaries from upstream", body)
-template extract*(body: untyped) = task("extract", "extract package sources or binaries")
+template extract*(body: untyped) = task("extract", "extract package sources or binaries", body)
 template prepare*(body: untyped) = task("prepare", "prepare or configure package for building", body)
-template build*(body: untyped) = task("build", "build the package")
-template install*(body: untyped) = task("install", "Install the package to it's pkg folder")
+template build*(body: untyped) = task("build", "build the package", body)
+template install*(body: untyped) = task("install", "Install the package to it's pkg folder", body)
