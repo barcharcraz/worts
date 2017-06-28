@@ -1,9 +1,11 @@
 import nake
 import nworts
 import semver
+import sequtils
+import os
 import strfmt
-import subfield
 var pkg: Pkg
+const cmakefile = slurp("CMakeLists.txt")
 pkg.name = "sqlite3"
 pkg.license = "Public Domain"
 pkg.rel = 1
@@ -16,12 +18,15 @@ pkg.vers = @[
     )
 ]
 var info = wort_defaults(pkg)
-#echo info.name
-echo info.download_dir
-#[[
-download:
-    shell $$"""aria2c -d ${info.download_dir} -o "${info.name}-3.19.3.zip" "${info.ver.url}" """
 
+download default_download info
 extract:
-    shell $$"""bsdtar -C ${layout.src_dir} -xf "${layout.download_dir}/${pkg.name}-3.19.3.zip" """
-]]#
+    default_extract info
+    writeFile(info.src_dir / "CMakeLists.txt", cmakefile)
+
+prepare default_prepare info
+
+build default_build info
+    
+install default_install info
+    

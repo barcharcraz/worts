@@ -5,35 +5,17 @@ import nakelib
 import semver
 import tables
 import hashes
+import typeinfo
 import macros
 import algorithm
+import private.pkgtypes
+import private.defaults
+import private.pkgtasks
+export pkgtypes
+export defaults
+export pkgtasks
 
-type PkgVer* = object
-    ver*: Version
-    url*: string
-    hash*: string
-    #maybe add gpg signature
-
-type PkgLayout* = object
-    pkg_dir*: string
-    build_dir*: string
-    download_dir*: string
-    src_dir*: string
-
-
-type Pkg* = object
-    name*: string
-    vers*: seq[PkgVer]
-    license*: string
-    rel*: int
-    desc*: string
-
-type PkgInstall = object
-    pkg: Pkg
-    version: PkgVer
-    layout: PkgLayout
-
-
+    
 
 var basedir = expandTilde("~/.worts")
 
@@ -66,13 +48,10 @@ proc wort_defaults*(p: Pkg): PkgInstall =
     result.version = p.vers[0]
     result.pkg = p
     result.layout = layout(p, $p.vers[0].ver)
+    createDirs(result.layout)
 
 
 #proc default_extract()
 
 
-template download*(body: untyped) = task("download", "download package sources or binaries from upstream", body)
-template extract*(body: untyped) = task("extract", "extract package sources or binaries", body)
-template prepare*(body: untyped) = task("prepare", "prepare or configure package for building", body)
-template build*(body: untyped) = task("build", "build the package", body)
-template install*(body: untyped) = task("install", "Install the package to it's pkg folder", body)
+
