@@ -38,3 +38,5 @@ macro `.`*(pkg: PkgInstall, field: string): untyped =
         if real_field != nil:
             result = newDotExpr(pkg, elm).newDotExpr real_field
             return
+template `.=`*(pkg: PkgInstall, field: string, rval: untyped) =
+    `.`(pkg, field) = rval

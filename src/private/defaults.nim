@@ -1,4 +1,5 @@
 import pkgtypes
+import strfmt
 import nakelib
 template default_download*(info: PkgInstall) =
     shell $$"""aria2c --allow-overwrite=true -d ${info.download_dir} -o "${info.name}-3.19.3.zip" "${info.url}" """

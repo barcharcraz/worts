@@ -16,19 +16,27 @@ export defaults
 export pkgtasks
 
     
-
-var basedir = expandTilde("~/.worts")
+when defined(packager):
+    var basedir = getCurrentDir()
+else:
+    var basedir = expandTilde("~/.worts")
 
 proc hash*(v: Version): Hash = hash($v)
 
 proc layout*(pkg: Pkg, ver: string): PkgLayout =
-    var pkgdir = basedir / "pkg"
-    var blddir = basedir / "bld"
-    var pkgid = $$"${pkg.name}-${ver}-${pkg.rel}"
-    result.pkg_dir = pkgdir / pkgid
-    result.build_dir = blddir / pkgid / "build"
-    result.src_dir = blddir / pkgid / "source"
-    result.download_dir = basedir / "downloads"
+    when defined(packager):
+        result.pkg_dir = basedir / pkg
+        result.build_dir = basedir / build
+        result.src_dir = basedir / source
+        result.download_dir = basedir
+    else:
+        var pkgdir = basedir / "pkg"
+        var blddir = basedir / "bld"
+        var pkgid = $$"${pkg.name}-${ver}-${pkg.rel}"
+        result.pkg_dir = pkgdir / pkgid
+        result.build_dir = blddir / pkgid / "build"
+        result.src_dir = blddir / pkgid / "source"
+        result.download_dir = basedir / "downloads"
 
 proc createDirs*(layout: PkgLayout) = 
     createDir layout.build_dir
@@ -42,6 +50,7 @@ proc deleteDirs*(layout: PkgLayout) =
     removeDir layout.download_dir
     removeDir layout.src_dir
 
+
 proc wort_defaults*(p: Pkg): PkgInstall =
     var p = p
     p.vers.sort() do (x: auto, y: auto) -> int: cmp(x.ver, y.ver)
@@ -50,6 +59,7 @@ proc wort_defaults*(p: Pkg): PkgInstall =
     result.layout = layout(p, $p.vers[0].ver)
     createDirs(result.layout)
 
+proc wort_defaults*(p: PkgInstall): PkgInstall = wort_defaults(p.pkg)
 
 #proc default_extract()
 
