@@ -16,7 +16,7 @@ download default_download pkg
 extract:
     # we use the untar library since we are buildidng bsdtar, so
     # we want an embedded extraction
-    var f = newTarFile($$"${pkg.name}-${$pkg.ver}.gz")
+    var f = newTarFile($$"${pkg.download_dir}/${pkg.name}-${$pkg.ver}.gz")
     untar.extract(f, pkg.src_dir)
     for kind, path in walkDir(pkg.src_dir / $$"${pkg.name}-${$pkg.ver}"):
         moveFile(path, pkg.src_dir / extractFilename(path))
