@@ -8,9 +8,9 @@ import hashes
 import typeinfo
 import macros
 import algorithm
-import private.pkgtypes
-import private.defaults
-import private.pkgtasks
+import nworts.pkgtypes
+import nworts.defaults
+import nworts.pkgtasks
 export pkgtypes
 export defaults
 export pkgtasks
@@ -25,9 +25,9 @@ proc hash*(v: Version): Hash = hash($v)
 
 proc layout*(pkg: Pkg, ver: string): PkgLayout =
     when defined(packager):
-        result.pkg_dir = basedir / pkg
-        result.build_dir = basedir / build
-        result.src_dir = basedir / source
+        result.pkg_dir = basedir / "pkg"
+        result.build_dir = basedir / "build"
+        result.src_dir = basedir / "source"
         result.download_dir = basedir
     else:
         var pkgdir = basedir / "pkg"
