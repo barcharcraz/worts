@@ -38,6 +38,7 @@ proc layout*(pkg: Pkg, ver: string): PkgLayout =
         result.src_dir = blddir / pkgid / "source"
         result.download_dir = basedir / "downloads"
 
+
 proc createDirs*(layout: PkgLayout) = 
     createDir layout.build_dir
     createDir layout.pkg_dir
@@ -58,6 +59,10 @@ proc wort_defaults*(p: Pkg): PkgInstall =
     result.pkg = p
     result.layout = layout(p, $p.vers[0].ver)
     createDirs(result.layout)
+    when defined(isolated):
+        # when isolated is defined we do our best to be self
+        # sufficient
+        putEnv("PATH", basedir / "wort_tools" / "bin")
 
 proc wort_defaults*(p: PkgInstall): PkgInstall = wort_defaults(p.pkg)
 

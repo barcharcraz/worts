@@ -10,7 +10,8 @@ proc default_download*(info: PkgInstall) =
 
 
 proc default_extract*(info: PkgInstall) =
-    shell $$"""bsdtar -C ${info.src_dir} -xf "${info.download_dir}/${info.name}-${$info.ver}.zip" """
+    var ext = parseUri(info.url).path.splitFile.ext
+    shell $$"""bsdtar -C ${info.src_dir} -xf "${info.download_dir}/${info.name}-${$info.ver}${ext}" """
     var dirs = toSeq(walkDir(info.src_dir))
     if dirs.len == 1:
         echo "Moving directories"
