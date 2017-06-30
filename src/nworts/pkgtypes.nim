@@ -2,7 +2,7 @@
 import semver
 import macros
 type PkgVer* = object
-    ver*: Version
+    ver*: string
     url*: string
     hash*: string
     #maybe add gpg signature
