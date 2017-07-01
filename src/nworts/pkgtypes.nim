@@ -1,11 +1,46 @@
 {.experimental.}
 import semver
 import macros
+
+type PkgPlatform* = enum
+    ppWin32,
+    ppLinux,
+    ppBsd,
+    ppDarwin
+
+type PkgType* = enum
+    ptSource, ## source from upstream
+    ptBinary, ## binary from upstream
+    ptPackage ## unused for now
+
+type PkgBuildSystem* = enum
+    pbsMeson,
+    pbsCmake
+    pbsNim,
+    pbsNimble,
+    pbsPod,
+    pbsAutotools,
+    pbsGnomeAutotools,
+    pbsKdeCmake,
+    pbsQmake,
+    pbsGNUMake,
+    pbsMake,
+    pbsNmake,
+    pbsDub,
+    pbsCargo,
+    pbsMsbuild,
+    pbsConan,
+    pbsB2,
+    pbsChocolatey,
+    pbsUnknown
+
 type PkgVer* = object
     ver*: string
     url*: string
     hash*: string
     #maybe add gpg signature
+
+
 
 type PkgLayout* = object
     pkg_dir*: string
@@ -20,11 +55,16 @@ type Pkg* = object
     license*: string
     rel*: int
     desc*: string
+    types*: set[PkgType]
+    build_sys*: PkgBuildSystem
+    platforms*: set[PkgPlatform]
 
 type PkgInstall* = object
     pkg*: Pkg
     version*: PkgVer
     layout*: PkgLayout
+
+
 
 macro `.`*(pkg: PkgInstall, field: string): untyped = 
     ## ^ This makes PkgInstall types act like contatinations
