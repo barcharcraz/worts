@@ -56,6 +56,7 @@ type PkgLayout* = object
     src_dir*: string
 
 
+
 type Pkg* = object
     name*: string
     vers*: seq[PkgVer]
@@ -65,6 +66,8 @@ type Pkg* = object
     types*: set[PkgType]
     build_sys*: PkgBuildSystem
     platforms*: set[PkgPlatform]
+
+
 
 type PkgInstall* = object
     pkg*: Pkg

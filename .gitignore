@@ -3,3 +3,10 @@ nimcache
 *.pdb
 *.ilk
 *.lib
+build
+pkg
+source
+*.tar.gz
+*.tar.xz
+*.zip
+*.tar.bz
