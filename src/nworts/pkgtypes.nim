@@ -13,6 +13,11 @@ type PkgType* = enum
     ptBinary, ## binary from upstream
     ptPackage ## unused for now
 
+type PkgArch* = enum
+    pax86,
+    paamd64,
+    paxarmv7
+
 type PkgBuildSystem* = enum
     pbsMeson,
     pbsCmake
@@ -38,6 +43,8 @@ type PkgVer* = object
     ver*: string
     url*: string
     hash*: string
+    arch*: set[PkgArch]
+    platform*: set[PkgPlatform]
     #maybe add gpg signature
 
 
@@ -63,6 +70,31 @@ type PkgInstall* = object
     pkg*: Pkg
     version*: PkgVer
     layout*: PkgLayout
+
+proc initPkgInstall*(): PkgInstall =
+    var pkg: Pkg
+    pkg.vers = @[]
+    pkg.rel = 1
+    pkg.types = {ptSource}
+    pkg.build_sys = pbsUnknown
+    pkg.platforms = { low(PkgPlatform)..high(PkgPlatform) }
+    result.pkg = pkg
+
+proc initPkgVer*(): PkgVer =
+    result.arch = {low(PkgArch)..high(PkgArch)}
+    result.platform = {low(PkgPlatform)..high(PkgPlatform)}
+proc initPkgVer*(ver: string, url: string, hash: string): PkgVer =
+    result = initPkgVer()
+    result.ver = ver
+    result.url = url
+    result.hash = hash
+proc initPkgVer*(ver, url, hash: string, arch: set[PkgArch], platform: set[PkgPlatform]): PkgVer =
+    result.ver = ver
+    result.url = url
+    result.hash = hash
+    result.arch = arch
+    result.platform = platform
+
 
 
 

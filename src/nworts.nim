@@ -2,7 +2,6 @@
 import os
 import strfmt
 import nakelib
-import semver
 import tables
 import hashes
 import typeinfo
@@ -21,7 +20,6 @@ when defined(packager):
 else:
     var basedir = expandTilde("~/.worts")
 
-proc hash*(v: Version): Hash = hash($v)
 
 proc layout*(pkg: Pkg, ver: string): PkgLayout =
     when defined(packager):
