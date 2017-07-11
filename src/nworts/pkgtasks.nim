@@ -10,3 +10,5 @@ template build*(body: untyped) =
     task("build", "build the package", body)
 template install*(body: untyped) = 
     task("install", "Install the package to it's pkg folder", body)
+template meta*(body: untyped) =
+    task("meta", "Generate metadata for the package", body)
