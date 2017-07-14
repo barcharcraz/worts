@@ -51,3 +51,4 @@ proc autotools_install*(pkg: PkgInstall) =
 proc cmake_meta*(pkg: PkgInstall) =
     withDir pkg.build_dir:
         shell $$"""cmake --system-information "${pkg.pkg_dir}/META  """
+
