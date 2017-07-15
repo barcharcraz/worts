@@ -119,6 +119,9 @@ proc initVerSpec*(ver: string, arch: set[PkgArch], platform: set[PkgPlatform]): 
     result.platform = platform
 
 proc initVerSpec*(ver: string): VerSpec =
+    result.ver = ver
+    result.arch = {low(PkgArch)..high(PkgArch)}
+    result.platform = {low(PkgPlatform)..high(PkgPlatform)}
 
 
 macro `.`*(pkg: PkgInstall, field: string): untyped = 
