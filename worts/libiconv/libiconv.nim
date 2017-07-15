@@ -22,3 +22,4 @@ extract default_extract pkg
 prepare default_prepare pkg
 build default_build pkg
 install default_install pkg
+meta cmake_meta pkg

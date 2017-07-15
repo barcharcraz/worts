@@ -27,6 +27,7 @@ extract:
 prepare default_prepare info
 
 build default_build info
-    
+
 install default_install info
-    
+
+meta cmake_meta info
