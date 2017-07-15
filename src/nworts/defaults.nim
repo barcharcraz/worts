@@ -6,7 +6,7 @@ import sequtils
 import uri
 proc default_download*(info: PkgInstall) =
     var ext = parseUri(info.url).path.splitFile.ext
-    shell $$"""aria2c --allow-overwrite=true -d ${info.download_dir} "${info.url}" """
+    shell $$"""aria2c --allow-overwrite=true -d "${info.download_dir}" "${info.url}" """
 
 
 proc default_extract*(info: PkgInstall) =
@@ -25,7 +25,7 @@ proc default_extract*(info: PkgInstall) =
 
 proc default_prepare*(info: PkgInstall) = 
     withDir info.build_dir:
-        shell $$"""cmake -G"Ninja" -DCMAKE_INSTALL_PREFIX=${info.pkg_dir} ${info.src_dir}"""
+        shell $$"""cmake -G"Ninja" -DCMAKE_INSTALL_PREFIX="${info.pkg_dir}" "${info.src_dir}"""
 
 proc default_build*(info: PkgInstall) = 
     withDir info.build_dir:

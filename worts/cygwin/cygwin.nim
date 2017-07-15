@@ -16,3 +16,7 @@ pkg.vers &= initPkgVer(
 pkg = wort_defaults(pkg)
 download default_download pkg
 extract: discard
+prepare: discard
+build: discard
+install:
+    shell """  """
