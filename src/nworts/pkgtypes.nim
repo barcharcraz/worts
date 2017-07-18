@@ -82,7 +82,12 @@ type Pkg* = object
     build_sys*: PkgBuildSystem
     platforms*: set[PkgPlatform]
 
-
+proc `ver=`*(pkg: var Pkg, ver: string) =
+    pkg.vers[0].ver = ver
+proc `hash=`*(pkg: var Pkg, hash: string) =
+    pkg.vers[0].hash = hash
+proc `url=`*(pkg: var Pkg, url: string) =
+    pkg.vers[0].url = url
 
 type PkgInstall* = object
     pkg*: Pkg
@@ -91,7 +96,9 @@ type PkgInstall* = object
 
 proc initPkgInstall*(): PkgInstall =
     var pkg: Pkg
-    pkg.vers = @[]
+    pkg.vers = @[
+        PkgVer()
+    ]
     pkg.rel = 1
     pkg.types = {ptSource}
     pkg.build_sys = pbsUnknown
