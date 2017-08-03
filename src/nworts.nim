@@ -10,15 +10,14 @@ import algorithm
 import nworts.pkgtypes
 import nworts.defaults
 import nworts.pkgtasks
+import nworts.pkgopts
 export pkgtypes
 export defaults
 export pkgtasks
+export pkgopts
 
     
-when defined(packager):
-    var basedir = getCurrentDir()
-else:
-    var basedir = expandTilde("~/.worts")
+
 
 
 proc layout*(pkg: Pkg, ver: string): PkgLayout =

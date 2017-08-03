@@ -4,6 +4,15 @@ import nakelib
 import semver
 import sequtils
 import uri
+import pkgopts
+import pkgexcept
+
+
+when defined(packager):
+    var basedir* = getCurrentDir()
+else:
+    var basedir* = expandTilde("~/.worts")
+
 proc default_download*(info: PkgInstall) =
     var ext = parseUri(info.url).path.splitFile.ext
     shell $$"""aria2c --allow-overwrite=true -d "${info.download_dir}" "${info.url}" """
@@ -25,15 +34,22 @@ proc default_extract*(info: PkgInstall) =
 
 proc default_prepare*(info: PkgInstall) = 
     withDir info.build_dir:
-        shell $$"""cmake -G"Ninja" -DCMAKE_INSTALL_PREFIX="${info.pkg_dir}" "${info.src_dir}"""
+        writeFile("CMakeCache.txt", cmake_writeopts(info.options))
+        shell $$"""cmake -G"Ninja" -DCMAKE_PREFIX_PATH="${basedir}/install" -DCMAKE_INSTALL_PREFIX="${info.pkg_dir}" "${info.src_dir}"""
 
 proc default_build*(info: PkgInstall) = 
-    withDir info.build_dir:
-        shell $$"cmake --build ."
+    case info.build_sys
+    of pbsCmake: info.cmake_build
+    of pbsAutotools: info.autotools_build
+    else:
+        raise newException(BuildSystemUnsupportedException, "build system is not supported")
 
-proc default_install*(info: PkgInstall) = 
-    withDir info.build_dir:
-        shell $$"cmake --build . --target install"
+proc default_install*(pkg: PkgInstall) = 
+    case pkg.build_sys
+    of pbsCmake: pkg.cmake_install
+    of pbsAutotools: pkg.autotools_install
+    else:
+        raise newException(BuildSystemUnsupportedException, "")
 
 
 proc autotools_prepare*(pkg: PkgInstall) =
@@ -47,6 +63,15 @@ proc autotools_build*(pkg: PkgInstall) =
 proc autotools_install*(pkg: PkgInstall) =
     withDir pkg.build_dir:
         shell $$"make install"
+
+
+proc cmake_build*(pkg: PkgInstall) =
+    withDir pkg.build_dir:
+        shell $$"cmake --build ."
+
+proc cmake_install*(pkg: PkgInstall) =
+    withDir pkg.build_dir:
+        shell $$"cmake --build . --target install"
 
 proc cmake_meta*(pkg: PkgInstall) =
     withDir pkg.build_dir:

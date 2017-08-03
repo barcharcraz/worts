@@ -1,0 +1,9 @@
+//Enable building amd64 assembly implementation
+AMD64:BOOL=OFF
+
+//Enable building i686 assembly implementation
+ASM686:BOOL=OFF
+
+//Choose the type of build, options are: None(CMAKE_CXX_FLAGS or
+// CMAKE_C_FLAGS used) Debug Release RelWithDebInfo MinSizeRel.
+CMAKE_BUILD_TYPE:STRING=Release

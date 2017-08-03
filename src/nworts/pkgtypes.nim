@@ -1,6 +1,7 @@
 {.experimental.}
 import semver
 import macros
+import pkgopts
 import options
 
 type PkgPlatform* = enum
@@ -81,13 +82,14 @@ type Pkg* = object
     types*: set[PkgType]
     build_sys*: PkgBuildSystem
     platforms*: set[PkgPlatform]
+    options*: PkgOptions
 
-proc `ver=`*(pkg: var Pkg, ver: string) =
-    pkg.vers[0].ver = ver
-proc `hash=`*(pkg: var Pkg, hash: string) =
-    pkg.vers[0].hash = hash
-proc `url=`*(pkg: var Pkg, url: string) =
-    pkg.vers[0].url = url
+#proc `ver=`*(pkg: var Pkg, ver: string) =
+#    pkg.vers[0].ver = ver
+#proc `hash=`*(pkg: var Pkg, hash: string) =
+#    pkg.vers[0].hash = hash
+#proc `url=`*(pkg: var Pkg, url: string) =
+#    pkg.vers[0].url = url
 
 type PkgInstall* = object
     pkg*: Pkg
@@ -100,6 +102,7 @@ proc initPkgInstall*(): PkgInstall =
         PkgVer()
     ]
     pkg.rel = 1
+    pkg.options = @[]
     pkg.types = {ptSource}
     pkg.build_sys = pbsUnknown
     pkg.platforms = { low(PkgPlatform)..high(PkgPlatform) }

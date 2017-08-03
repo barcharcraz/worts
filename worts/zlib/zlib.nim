@@ -1,17 +1,18 @@
 import nworts, nake, semver, sequtils, strfmt, untar
-const cache = slurp("CMakeCache.txt")
-var pkg: PkgInstall
-pkg.name = "libarchive"
-pkg.license = "BSD"
+
+var pkg = initPkgInstall()
+const defaults = slurp("CMakeCache.txt")
+pkg.name = "zlib"
+pkg.license = "zlib"
 pkg.rel = 1
-pkg.options = cmake_genopts(cache)
-pkg.desc = "the libarchive library and utilities"
+pkg.options = cmake_genopts(defaults)
+pkg.desc = "The zlib archival library"
 pkg.build_sys = pbsCmake
 pkg.vers = @[
     initPkgVer(
-        ver = "3.3.1",
-        url = "https://www.libarchive.org/downloads/libarchive-3.3.1.tar.gz",
-        hash = "29CA5BD1624CA5A007AA57E16080262AB4379DBF8797F5C52F7EA74A3B0424E7"
+        ver = "1.2.11",
+        url = "https://zlib.net/zlib-1.2.11.tar.gz",
+        hash = "c3e5e9fdd5004dcb542feda5ee4f0ff0744628baf8ed2dd5d66f8ca1197cb1a1"
     )
 ]
 pkg = wort_defaults pkg
