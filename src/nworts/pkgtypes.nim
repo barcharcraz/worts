@@ -41,14 +41,6 @@ type PkgBuildSystem* = enum
     pbsChocolatey,
     pbsUnknown
 
-type PkgVer* = object
-    ver*: string
-    url*: string
-    hash*: string
-    arch*: set[PkgArch]
-    platform*: set[PkgPlatform]
-    #maybe add gpg signature
-
 
 
 
@@ -60,35 +52,43 @@ type PkgLayout* = object
     src_dir*: string
 
 
+## `Pkg` is the main informational data structure
+## describing a package
+type
+    Pkg* = object
+        name*: string
+        ver*: string
+        url*: string
+        hash*: string
+        arch*: set[PkgArch]
+        platform*: set[PkgPlatform]
+        license*: string
+        rel*: int
+        desc*: string
+        types*: set[PkgType]
+        build_sys*: PkgBuildSystem
+        platforms*: set[PkgPlatform]
+        options*: PkgOptions
+    
+    PkgTasks* = object
+        download*: proc(pkg: PkgInstall)
+        extract*: proc(pkg: PkgInstall)
+        prepare*: proc(pkg: PkgInstall)
+        build*: proc(pkg: PkgInstall)
+        install*: proc(pkg: PkgInstall)
+        meta*: proc(pkg: PkgInstall)
 
-type Pkg* = object
-    name*: string
-    vers*: seq[PkgVer]
-    license*: string
-    rel*: int
-    desc*: string
-    types*: set[PkgType]
-    build_sys*: PkgBuildSystem
-    platforms*: set[PkgPlatform]
-    options*: PkgOptions
-
-#proc `ver=`*(pkg: var Pkg, ver: string) =
-#    pkg.vers[0].ver = ver
-#proc `hash=`*(pkg: var Pkg, hash: string) =
-#    pkg.vers[0].hash = hash
-#proc `url=`*(pkg: var Pkg, url: string) =
-#    pkg.vers[0].url = url
-
-type PkgInstall* = object
-    pkg*: Pkg
-    version*: PkgVer
-    layout*: PkgLayout
+    PkgInstall* = object
+        pkg*: Pkg
+        layout*: PkgLayout
+        tasks*: PkgTasks
 
 proc initPkgInstall*(): PkgInstall =
     var pkg: Pkg
-    pkg.vers = @[
-        PkgVer()
-    ]
+    pkg.ver = "0"
+    pkg.url = ""
+    pkg.hash = ""
+    pkg.arch = {low(PkgArch)..high(PkgArch)}
     pkg.rel = 1
     pkg.options = @[]
     pkg.types = {ptSource}
@@ -96,20 +96,7 @@ proc initPkgInstall*(): PkgInstall =
     pkg.platforms = { low(PkgPlatform)..high(PkgPlatform) }
     result.pkg = pkg
 
-proc initPkgVer*(): PkgVer =
-    result.arch = {low(PkgArch)..high(PkgArch)}
-    result.platform = {low(PkgPlatform)..high(PkgPlatform)}
-proc initPkgVer*(ver: string, url: string, hash: string): PkgVer =
-    result = initPkgVer()
-    result.ver = ver
-    result.url = url
-    result.hash = hash
-proc initPkgVer*(ver, url, hash: string, arch: set[PkgArch], platform: set[PkgPlatform]): PkgVer =
-    result.ver = ver
-    result.url = url
-    result.hash = hash
-    result.arch = arch
-    result.platform = platform
+
 
 
 
@@ -126,5 +113,6 @@ macro `.`*(pkg: PkgInstall, field: string): untyped =
         if real_field != nil:
             result = newDotExpr(pkg, elm).newDotExpr real_field
             return
+
 template `.=`*(pkg: PkgInstall, field: string, rval: untyped) =
     `.`(pkg, field) = rval

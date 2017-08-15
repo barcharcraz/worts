@@ -51,10 +51,8 @@ proc deleteDirs*(layout: PkgLayout) =
 
 proc wort_defaults*(p: Pkg): PkgInstall =
     var p = p
-    p.vers.sort() do (x: auto, y: auto) -> int: cmp(x.ver, y.ver)
-    result.version = p.vers[0]
     result.pkg = p
-    result.layout = layout(p, $p.vers[0].ver)
+    result.layout = layout(p, p.ver)
     createDirs(result.layout)
     when defined(isolated):
         # when isolated is defined we do our best to be self

@@ -8,13 +8,9 @@ pkg.name = "libiconv"
 pkg.license = "GPL/LGPL"
 pkg.rel = 1
 pkg.desc = "the gnu iconv library"
-pkg.vers = @[
-    PkgVer(
-        ver: "1.15",
-        url: "https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.15.tar.gz",
-        hash: "ccf536620a45458d26ba83887a983b96827001e92a13847b45e4925cc8913178"
-    )
-]
+pkg.ver: "1.15",
+pkg.url: "https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.15.tar.gz",
+pkg.hash: "ccf536620a45458d26ba83887a983b96827001e92a13847b45e4925cc8913178"
 pkg = wort_defaults pkg
 
 download default_download pkg

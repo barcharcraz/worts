@@ -7,13 +7,9 @@ pkg.rel = 1
 pkg.options = cmake_genopts(cache)
 pkg.desc = "the libarchive library and utilities"
 pkg.build_sys = pbsCmake
-pkg.vers = @[
-    initPkgVer(
-        ver = "3.3.1",
-        url = "https://www.libarchive.org/downloads/libarchive-3.3.1.tar.gz",
-        hash = "29CA5BD1624CA5A007AA57E16080262AB4379DBF8797F5C52F7EA74A3B0424E7"
-    )
-]
+pkg.ver = "3.3.1"
+pkg.url = "https://www.libarchive.org/downloads/libarchive-3.3.1.tar.gz"
+pkg.hash = "29CA5BD1624CA5A007AA57E16080262AB4379DBF8797F5C52F7EA74A3B0424E7"
 pkg = wort_defaults pkg
 download default_download pkg
 extract:
