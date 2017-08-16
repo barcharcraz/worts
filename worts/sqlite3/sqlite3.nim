@@ -1,33 +1,27 @@
-import nake
 import nworts
 import semver
 import sequtils
 import os
 import strfmt
-var pkg: Pkg
+var pkg*: Pkg
 const cmakefile = slurp("CMakeLists.txt")
 pkg.name = "sqlite3"
 pkg.license = "Public Domain"
 pkg.rel = 1
 pkg.desc = "The Sqlite database library"
-pkg.vers = @[
-    initPkgVer(
-        ver = "3.19.3",
-        url = "https://www.sqlite.org/2017/sqlite-amalgamation-3190300.zip",
-        hash = "130185efe772a7392c5cecb4613156aba12f37b335ef91e171c345e197eabdc1"
-    )
-]
-var info = wort_defaults(pkg)
+pkg.ver = "3.19.3"
+pkg.url = "https://www.sqlite.org/2017/sqlite-amalgamation-3190300.zip"
+pkg.hash = "130185efe772a7392c5cecb4613156aba12f37b335ef91e171c345e197eabdc1"
 
-download default_download info
-extract:
-    default_extract info
-    writeFile(info.src_dir / "CMakeLists.txt", cmakefile)
+pkg.download = default_download
+pkg.extract = proc(pkg: PkgInstall) =
+    default_extract pkg
+    writeFile(pkg.src_dir / "CMakeLists.txt", cmakefile)
 
-prepare default_prepare info
+pkg.prepare = default_prepare
 
-build default_build info
+pkg.build = default_build
 
-install default_install info
+pkg.install = default_install
 
-meta cmake_meta info
+pkg.meta = cmake_meta

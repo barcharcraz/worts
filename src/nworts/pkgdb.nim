@@ -5,14 +5,12 @@ import algorithm
 import semver
 import options
 import macros
+import pkgfmt
 
-macro wrapType(typ: typed, wrapwith: typed): typed =
-    dumpTree: getAst(typ)
-    dumptree: wrapwith
+var default_db*: seq[Pkg] = @[]
 
-proc matches(spec: Pkg, candidate: Pkg): bool =
-    result = result and (spec.name == candidate.name)
-    result = result and (parseVersion(spec.ver) == parseVersion(candidate.ver)
-
-
-wrapType(Pkg, Option)
+proc print_packages*(db: seq[Pkg]) =
+    var db = db.sorted do (x, y: auto) -> int:
+        return cmp(x.name, y.name)
+    for pkg in db:
+        echo format(pkg)

@@ -13,32 +13,22 @@ import pkgtypes
 #template meta*(body: untyped) =
 #    task("meta", "Generate metadata for the package", body)
 
-template download*(body: untyped) =
-    mixin pkg
-    pkg.tasks.download = proc(pkg: PkgInstall) =
-        body
 
-template extract*(body: untyped) =
-    mixin pkg
-    pkg.tasks.extract = proc(pkg: PkgInstall) = 
-        body
 
-template prepare*(body: untyped) =
-    mixin pkg
-    pkg.tasks.prepare = proc(pkg: PkgInstall) =
-        body
+proc `download=`*(pkg: var Pkg, body: proc(pkg: PkgInstall)) =
+    pkg.tasks.download = body
 
-template build*(body: untyped) =
-    mixin pkg
-    pkg.tasks.build = proc(pkg: PkgInstall) =
-        body
+proc `extract=`*(pkg: var Pkg, body: proc(pkg: PkgInstall)) =
+    pkg.tasks.extract = body
 
-template install*(body: untyped) =
-    mixin pkg
-    pkg.tasks.install = proc(pkg: PkgInstall) =
-        body
+proc `prepare=`*(pkg: var Pkg, body: proc(pkg: PkgInstall)) =
+    pkg.tasks.prepare = body
 
-template meta*(body: untyped) =
-    mixin pkg
-    pkg.tasks.meta = proc(pkg: PkgInstall) =
-        body
+proc `build=`*(pkg: var Pkg, body: proc(pkg: PkgInstall)) =
+    pkg.tasks.build = body
+
+proc `install=`*(pkg: var Pkg, body: proc(pkg: PkgInstall)) =
+    pkg.tasks.install = body
+
+proc `meta=`*(pkg: var Pkg, body: proc(pkg: PkgInstall)) =
+    pkg.tasks.meta = body

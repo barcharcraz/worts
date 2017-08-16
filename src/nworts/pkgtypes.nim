@@ -51,6 +51,10 @@ type PkgLayout* = object
     download_dir*: string
     src_dir*: string
 
+type PkgTarget* = object
+    arch*: PkgArch
+    platform*: PkgPlatform
+
 
 ## `Pkg` is the main informational data structure
 ## describing a package
@@ -70,6 +74,7 @@ type
         bldplatforms*: set[PkgPlatform]
         tgtplatforms*: set[PkgPlatform]
         options*: PkgOptions
+        tasks*: PkgTasks
     
     PkgTasks* = object
         download*: proc(pkg: PkgInstall)
@@ -80,27 +85,26 @@ type
         meta*: proc(pkg: PkgInstall)
 
     PkgInstall* = object
+        target*: PkgTarget 
         pkg*: Pkg
         layout*: PkgLayout
-        tasks*: PkgTasks
+         
+
+proc initPkg*(): Pkg =
+    result.ver = "0"
+    result.url = ""
+    result.hash = ""
+    result.arch = {low(PkgArch)..high(PkgArch)}
+    result.rel = 1
+    result.options = @[]
+    result.types = {ptSource}
+    result.build_sys = pbsUnknown
+    result.bldplatforms = { low(PkgPlatform)..high(PkgPlatform) }
+    result.tgtplatforms = { low(PkgPlatform)..high(PkgPlatform) }
 
 proc initPkgInstall*(): PkgInstall =
-    var pkg: Pkg
-    pkg.ver = "0"
-    pkg.url = ""
-    pkg.hash = ""
-    pkg.arch = {low(PkgArch)..high(PkgArch)}
-    pkg.rel = 1
-    pkg.options = @[]
-    pkg.types = {ptSource}
-    pkg.build_sys = pbsUnknown
-    pkg.bldplatforms = { low(PkgPlatform)..high(PkgPlatform) }
-    pkg.tgtplatforms = { low(PkgPlatform)..high(PkgPlatform) }
+    var pkg = initPkg()
     result.pkg = pkg
-
-
-
-
 
 
 macro `.`*(pkg: PkgInstall, field: string): untyped = 

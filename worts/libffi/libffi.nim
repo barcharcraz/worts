@@ -1,5 +1,5 @@
 import nake, nworts, sequtils, os
-var pkg = initPkgInstall()
+var pkg* = initPkgInstall()
 const cmakefile = slurp("CMakeLists.txt")
 pkg.name = "libffi"
 pkg.license = "MIT"
