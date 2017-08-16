@@ -67,7 +67,8 @@ type
         desc*: string
         types*: set[PkgType]
         build_sys*: PkgBuildSystem
-        platforms*: set[PkgPlatform]
+        bldplatforms*: set[PkgPlatform]
+        tgtplatforms*: set[PkgPlatform]
         options*: PkgOptions
     
     PkgTasks* = object
@@ -93,7 +94,8 @@ proc initPkgInstall*(): PkgInstall =
     pkg.options = @[]
     pkg.types = {ptSource}
     pkg.build_sys = pbsUnknown
-    pkg.platforms = { low(PkgPlatform)..high(PkgPlatform) }
+    pkg.bldplatforms = { low(PkgPlatform)..high(PkgPlatform) }
+    pkg.tgtplatforms = { low(PkgPlatform)..high(PkgPlatform) }
     result.pkg = pkg
 
 
