@@ -43,26 +43,7 @@ proc deleteDirs*(layout: PkgLayout) =
     removeDir layout.src_dir
 
 
-proc wort_defaults*(p: Pkg): PkgInstall =
-    var p = p
-    result.pkg = p
-    result.layout = layout(p, p.ver)
-    createDirs(result.layout)
-    case hostOS:
-      of "linux": result.target.platform = ppLinux
-      of "windows": result.target.platform = ppWin32
-      else: raise newException(PlatformUnsupportedException, "")
 
-    case hostCPU:
-      of "amd64": result.target.arch = paamd64
-      else: raise newException(PlatformUnsupportedException, "")
-
-    when defined(isolated):
-        # when isolated is defined we do our best to be self
-        # sufficient
-        putEnv("PATH", basedir / "wort_tools" / "bin")
-
-proc wort_defaults*(p: PkgInstall): PkgInstall = wort_defaults(p.pkg)
 
 
 
