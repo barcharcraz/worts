@@ -1,8 +1,11 @@
 {.experimental.}
 import semver
 import macros
+import ospaths
 import pkgopts
+import uri
 import options
+import strutils
 
 type PkgPlatform* = enum
     ppWin32,
@@ -106,6 +109,16 @@ template `.=`*(pkg: PkgInstall, field: string, rval: untyped) =
     `.`(pkg, field) = rval
 
 
-
+proc downloaded_filename*(pkg: Pkg): string = 
+    var path = parseUri(pkg.url).path
+    var exts = path.split(ExtSep)
+    if exts[^1] == "meta4":
+        exts = exts[0..^2]
+    var ext = ""
+    if exts[^2] == "tar":
+        ext = exts[^2..^1].join($ExtSep)
+    else:
+        ext = exts[^1]
+    result = pkg.name & "-" & pkg.ver & "." & ext
 
 

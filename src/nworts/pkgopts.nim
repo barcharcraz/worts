@@ -3,6 +3,7 @@
 import nre
 import logging
 import strfmt
+import strutils
 
 type PkgOption* = object
     name*: string
@@ -47,3 +48,19 @@ proc cmake_writeopts*(options: PkgOptions): string =
     result = ""
     for opt in options:
         result &= opt.name & ":" & opt.typ & "=" & opt.value & "\n"
+
+proc cmake_readmeta*(meta: string): PkgOptions =
+    const cachestart = """
+=================================================================
+=== ../CMakeCache.txt
+=================================================================
+"""
+    const cacheend = """
+=================================================================
+"""
+    result = @[]
+    var startidx = meta.find(cachestart)
+    var endidx = meta.find(cacheend, startidx+len(cachestart))
+    var cache = meta[startidx+len(cachestart)..endidx]
+    result = cmake_genopts(cache)
+

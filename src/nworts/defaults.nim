@@ -77,7 +77,7 @@ proc cmake_install*(pkg: PkgInstall) =
 
 proc cmake_meta*(pkg: PkgInstall) =
   withDir pkg.build_dir:
-    shell $$"""cmake --system-information "${pkg.pkg_dir}/META  """
+    shell $$"""cmake --system-information "${pkg.pkg_dir}/META"  """
 
 
 
@@ -85,16 +85,12 @@ proc cmake_meta*(pkg: PkgInstall) =
 
 
 proc default_download*(info: PkgInstall) =
-  var ext = parseUri(info.url).path.splitFile.ext
-  shell $$"""aria2c --allow-overwrite=true -d "${info.download_dir}" "${info.url}" """
+  var fname = info.pkg.downloaded_filename()
+  shell $$"""aria2c --allow-overwrite=true -d "${info.download_dir}" -o"${fname}" "${info.url}" """
 
 
 proc default_extract*(info: PkgInstall) =
-  var ext = parseUri(info.url).path.splitFile.ext
-  var filename = parseUri(info.url).path.extractFilename
-  # special case for metalinks
-  # TODO: stop doing this and actually look in the metalink
-  if ext == ".meta4": filename = splitfile(filename).name
+  var filename = info.pkg.downloaded_filename()
   shell $$"""bsdtar -C ${info.src_dir} -xf "${info.download_dir}/${filename}" """
   var dirs = toSeq(walkDir(info.src_dir))
   if dirs.len == 1:
