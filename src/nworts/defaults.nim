@@ -50,6 +50,7 @@ proc wort_defaults*(p: Pkg): PkgInstall =
     createDirs(result.layout)
     case hostOS:
       of "linux": result.target.platform = ppLinux
+      of "windows": result.target.platform = ppWin32
       else: raise newException(PlatformUnsupportedException, "")
 
     case hostCPU:
@@ -141,3 +142,10 @@ proc default_install*(pkg: PkgInstall) =
   of pbsAutotools: pkg.autotools_install
   else:
     raise newException(BuildSystemUnsupportedException, "")
+
+proc default_meta*(pkg: PkgInstall) =
+  case pkg.build_sys
+  of pbsCmake: pkg.cmake_meta
+  else:
+    raise newException(BuildSystemUnsupportedException, "")
+

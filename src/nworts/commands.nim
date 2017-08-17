@@ -6,8 +6,10 @@ import pkgtypes
 import defaults
 import typeinfo
 import os
+import pkgexcept
 import algorithm
 import pkgfmt
+import strutils
 import sequtils
 
 proc exec*(pkg: Pkg, taskname: string) =
@@ -32,11 +34,12 @@ template allow_multiple*(db: seq[Pkg]) =
             for pkg in db:
                 echo format(pkg)
         elif args.len == 1:
-            for pkg in db:
-                if pkg.name == args[0]:
-                    echo format(pkg)
+            for pkg in db.filter(args[0]):
+                echo format(pkg)
         elif args.len == 2:
-            var matches = db.filter do (item: Pkg) -> bool: item.name == args[0]
-            if matches.len != 1:
-                echo "could not find package"
+            var matches = db.filter(args[0])
+            if matches.len == 0:
+                raise newException(PackageNotFoundException, "")
+            if matches.len > 1:
+                raise newException(PackageNotUniqueException, "")
             exec(matches[0], args[1])

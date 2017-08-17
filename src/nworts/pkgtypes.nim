@@ -69,7 +69,7 @@ type
         license*: string
         rel*: int
         desc*: string
-        types*: set[PkgType]
+        kind*: PkgType
         build_sys*: PkgBuildSystem
         bldplatforms*: set[PkgPlatform]
         tgtplatforms*: set[PkgPlatform]
@@ -88,24 +88,6 @@ type
         target*: PkgTarget 
         pkg*: Pkg
         layout*: PkgLayout
-         
-
-proc initPkg*(): Pkg =
-    result.ver = "0"
-    result.url = ""
-    result.hash = ""
-    result.arch = {low(PkgArch)..high(PkgArch)}
-    result.rel = 1
-    result.options = @[]
-    result.types = {ptSource}
-    result.build_sys = pbsUnknown
-    result.bldplatforms = { low(PkgPlatform)..high(PkgPlatform) }
-    result.tgtplatforms = { low(PkgPlatform)..high(PkgPlatform) }
-
-proc initPkgInstall*(): PkgInstall =
-    var pkg = initPkg()
-    result.pkg = pkg
-
 
 macro `.`*(pkg: PkgInstall, field: string): untyped = 
     ## ^ This makes PkgInstall types act like contatinations
@@ -122,3 +104,8 @@ macro `.`*(pkg: PkgInstall, field: string): untyped =
 
 template `.=`*(pkg: PkgInstall, field: string, rval: untyped) =
     `.`(pkg, field) = rval
+
+
+
+
+

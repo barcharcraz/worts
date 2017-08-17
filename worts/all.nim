@@ -5,9 +5,11 @@ import libiconv.libiconv
 import fmt.fmt
 import zlib.zlib
 import qt.qt
+import spdlog.spdlog
 
 var db: seq[Pkg] = @[]
 db.add qt.pkg()
+db.add spdlog.pkg
 db.add fmt.pkg
 db.add libarchive.pkg
 db.add sqlite3.pkg
