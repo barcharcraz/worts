@@ -9,6 +9,7 @@ base.license = "LGPL"
 base.ver = "5.9.1"
 base.platform = {}
 base.arch = {}
+base.kind = ptBinary
 base.tasks = PkgTasks()
 base.download = default_download
 

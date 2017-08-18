@@ -26,6 +26,5 @@ proc filter*(db: seq[Pkg], flt: string): seq[Pkg] =
         var tgtspec = join(splitstr[1..high(splitstr)], ":")
         var target = parseTargetSpec(tgtspec)
         result = item.name == splitstr[0]
-        if splitstr.len > 1:
-            result = result and target.platform in item.platform
-            result = result and target.arch in item.arch
+        result = result and target.platform in item.platform
+        result = result and target.arch in item.arch

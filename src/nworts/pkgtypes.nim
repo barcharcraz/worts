@@ -28,11 +28,15 @@ type PkgBuildSystem* = enum
     pbsCmake
     pbsNim,
     pbsNimble,
+    pbsNpm,
+    pbsSetupTools,
+    pbsPip,
     pbsPod,
     pbsAutotools,
     pbsGnomeAutotools,
     pbsKdeCmake,
     pbsQmake,
+    pbsQbs,
     pbsGNUMake,
     pbsMake,
     pbsNmake,
@@ -40,7 +44,8 @@ type PkgBuildSystem* = enum
     pbsCargo,
     pbsMsbuild,
     pbsConan,
-    pbsB2,
+    pbsBuild2,
+    pbsBoostBuild,
     pbsChocolatey,
     pbsUnknown
 

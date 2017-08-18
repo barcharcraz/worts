@@ -77,9 +77,15 @@ proc cmake_install*(pkg: PkgInstall) =
 
 proc cmake_meta*(pkg: PkgInstall) =
   withDir pkg.build_dir:
-    shell $$"""cmake --system-information "${pkg.pkg_dir}/META"  """
+    shell $$"""cmake --system-information "${pkg.pkg_dir}/share/worts/${pkg.name}/META"  """
 
 
+proc boost_build*(pkg: PkgInstall) =
+  withDir pkg.src_dir:
+    shell($$"""b2  --stagedir="${pkg.build_dir}" --prefix="${pkg.pkg_dir}" --layout=tagged -j 8 stage """)
+proc boost_install*(pkg: PkgInstall) =
+  withDir pkg.src_dir:
+    shell($$"""b2  --stagedir="${pkg.build_dir}" --prefix="${pkg.pkg_dir}" --layout=tagged -j 8 install""")
 
 
 
@@ -99,10 +105,11 @@ proc default_extract*(info: PkgInstall) =
       moveFile(path, info.src_dir / extractFilename(path))
     removeDir dirs[0].path
 
-proc default_prepare*(pkg: PkgInstall) = 
+proc default_prepare*(pkg: PkgInstall) =
   case pkg.build_sys
   of pbsCmake: pkg.cmake_prepare
   of pbsAutotools: pkg.autotools_prepare
+  of pbsBoostBuild: discard
   else:
     raise newException(BuildSystemUnsupportedException, "")
 
@@ -110,6 +117,7 @@ proc default_build*(info: PkgInstall) =
   case info.build_sys
   of pbsCmake: info.cmake_build
   of pbsAutotools: info.autotools_build
+  of pbsBoostBuild: info.boost_build
   else:
     raise newException(BuildSystemUnsupportedException, "build system is not supported")
 
@@ -117,6 +125,7 @@ proc default_install*(pkg: PkgInstall) =
   case pkg.build_sys
   of pbsCmake: pkg.cmake_install
   of pbsAutotools: pkg.autotools_install
+  of pbsBoostBuild: pkg.boost_install
   else:
     raise newException(BuildSystemUnsupportedException, "")
 

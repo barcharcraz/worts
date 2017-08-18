@@ -7,6 +7,7 @@ import defaults
 import typeinfo
 import os
 import pkgexcept
+import terminal
 import algorithm
 import pkgfmt
 import strutils
@@ -16,15 +17,12 @@ import sequtils
 proc exec*(pkg: Pkg, taskname: string, target: PkgTarget) =
     var installInfo = wort_defaults pkg
     installInfo.target = target
-    if taskname == "all":
-        pkg.tasks.download(installInfo)
-        pkg.tasks.extract(installInfo)
-        pkg.tasks.prepare(installInfo)
-        pkg.tasks.build(installInfo)
-        pkg.tasks.install(installInfo)
-        pkg.tasks.meta(installInfo)
     for name, val in pkg.tasks.fieldPairs():
         if name == taskname: val(installInfo)
+        elif taskname == "all" and val != nil:
+            styledEcho( fgYellow, "📦", resetStyle, ": executing " & name )
+            val(installInfo)
+
 
 template allow_standalone*(pkg: Pkg) =
     when isMainModule:

@@ -17,6 +17,7 @@ proc initPkg*(): Pkg =
     result.ver = "0"
     result.url = ""
     result.hash = ""
+    result.platform = {low(PkgPlatform)..high(PkgPlatform)}
     result.arch = {low(PkgArch)..high(PkgArch)}
     result.rel = 1
     result.options = @[]
@@ -41,12 +42,10 @@ proc initPkgTarget*(): PkgTarget =
 
 proc parseTargetSpec*(spec: string): PkgTarget =
     var target = spec.split(":")
-    var arch: PkgArch
-    var plat: PkgPlatform
+    result = initPkgTarget()
     for item in target[0..high(target)]:
-        if item.startsWith("pa"): arch = parseEnum[PkgArch](item)
-        if item.startsWith("pp"): plat = parseEnum[PkgPlatform](item) 
-    result = PkgTarget(arch: arch, platform: plat)
+        if item.startsWith("pa"): result.arch = parseEnum[PkgArch](item)
+        if item.startsWith("pp"): result.platform = parseEnum[PkgPlatform](item) 
 
 proc wort_defaults*(p: Pkg): PkgInstall =
     var p = p
