@@ -16,12 +16,13 @@ type PkgPlatform* = enum
 type PkgType* = enum
     ptSource, ## source from upstream
     ptBinary, ## binary from upstream
-    ptPackage ## unused for now
+    ptPackage ## unused for now, possibly binary from wort
 
 type PkgArch* = enum
     pax86,
     paamd64,
-    paxarmv7
+    paxarmv7,
+    paarch64
 
 type PkgBuildSystem* = enum
     pbsMeson,
@@ -54,10 +55,11 @@ type PkgBuildSystem* = enum
 
 
 type PkgLayout* = object
-    pkg_dir*: string
-    build_dir*: string
-    download_dir*: string
-    src_dir*: string
+    pkg_dir*: string ## the directory where package is installed (the prefix)
+    build_dir*: string ## the directory for build files
+    download_dir*: string ## the directory for downloads
+    src_dir*: string ## the directory where source should be extracted
+
 
 type PkgTarget* = object
     arch*: PkgArch
@@ -72,17 +74,17 @@ type
         ver*: string
         url*: string
         hash*: string
-        arch*: set[PkgArch]
-        platform*: set[PkgPlatform]
+        arch*: set[PkgArch] ## the archetectures that this package can be built on
+        platform*: set[PkgPlatform] ## the platforms on which this package can be built
         license*: string
         rel*: int
         desc*: string
-        kind*: PkgType
-        build_sys*: PkgBuildSystem
+        kind*: PkgType ## kind of package, source/binary
+        build_sys*: PkgBuildSystem ## build system, used to select default task actions
         bldplatforms*: set[PkgPlatform]
         tgtplatforms*: set[PkgPlatform]
-        options*: PkgOptions
-        tasks*: PkgTasks
+        options*: PkgOptions ## the options for a package
+        tasks*: PkgTasks ## the tasks for a package, essentially a virtual table
     
     PkgTasks* = object
         download*: proc(pkg: PkgInstall)
@@ -93,7 +95,7 @@ type
         meta*: proc(pkg: PkgInstall)
 
     PkgInstall* = object
-        target*: PkgTarget 
+        target*: PkgTarget ## this is the kind of system the package should *run* on
         pkg*: Pkg
         layout*: PkgLayout
 
