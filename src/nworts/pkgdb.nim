@@ -24,26 +24,17 @@ proc print_packages*(db: seq[Pkg]) =
 proc filter*(db: seq[Pkg], flt: string): seq[Pkg] =
     result = db.filter do (item: Pkg) -> bool:
         var splitstr = flt.split(":")
+        var v = v"0.0.0"
+        for elm in splitstr:
+            if elm[0] == 'v':
+                v = parseVersion(elm[1..^1])
         var tgtspec = join(splitstr[1..high(splitstr)], ":")
+        
         var target = parseTargetSpec(tgtspec)
+
         result = item.name == splitstr[0]
+        if v != v"0.0.0": result = result and parseVersion(item.ver) == v
         result = result and target.platform in item.platform
         result = result and target.arch in item.arch
 
-type pkgFilter = object
-    pfx: string ## prefix to trigger the filter, longest match first
-                ## must be unique
-    cmp: proc(a: Pkg, b: string): bool ## does the filter evaluate as true for a given package
 
-proc initPkgFilter(pfx: string, cmp: (a: Pkg, b: string) -> bool): pkgFilter =
-    result.pfx = pfx
-    result.cmp = cmp
-
-template filterprefix(pfx: typed, body: untyped) =
-    initPkgFilter(pfx) do (a: Pkg, b: string) -> bool:
-        result = body
-
-var fltdb = newSeq[pkgFilter]()
-
-fltdb.add filterprefix("pp") do: parseEnum[PkgPlatform](b) in a.platform
-fltdb.add initPkgFilter("pa") do (a, b: auto) -> auto: parseEnum[PkgArch](b) in a.arch

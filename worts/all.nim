@@ -11,6 +11,7 @@ import boost.boost
 import gflags.gflags
 import libelektra.libelektra
 import yaml_cpp.yaml_cpp
+import semver
 
 var db: seq[Pkg] = @[]
 db.add qt.pkg()

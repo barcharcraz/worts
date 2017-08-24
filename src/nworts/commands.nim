@@ -12,6 +12,7 @@ import algorithm
 import pkgfmt
 import strutils
 import pkginit
+import semver
 import sequtils
 
 proc exec*(pkg: Pkg, taskname: string, target: PkgTarget) =
@@ -34,6 +35,7 @@ template allow_standalone*(pkg: Pkg) =
             exec(pkg, args[0])
 
 template allow_multiple*(db: seq[Pkg]) =
+    
     when isMainModule:
         var args = commandLineParams()
         echo args
@@ -46,6 +48,8 @@ template allow_multiple*(db: seq[Pkg]) =
                 echo format(pkg)
         of 2..3:
             var matches = db.filter(args[0])
+            matches.sort do (a: Pkg, b: Pkg) -> int:
+                cmp(parseVersion(a.ver), parseVersion(b.ver))
             if matches.len == 0:
                 raise newException(PackageNotFoundException, "")
             if matches.len > 1:

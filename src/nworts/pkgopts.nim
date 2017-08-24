@@ -33,6 +33,11 @@ proc initPkgOption*(name: string, typ: string, default: string): PkgOption =
     result.default = default
     result.value = default
 
+proc boost_defaultopts*(): PkgOptions =
+    result = @[]
+    result.add initPkgOption("--prefix", "STRING", "")
+    result.add initPkgOption("--stagedir", "STRING", "")
+
 proc cmake_genopts*(cache: string): PkgOptions =
     ## ^ This generates options from a cmake cache file
     ## thus should contain both data types and names
