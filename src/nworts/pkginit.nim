@@ -5,6 +5,27 @@ import pkgexcept
 import strutils
 import defaults
 
+
+proc initPkgCompilers*(): PkgCompilers =
+    result.cc = pccGcc
+    result.cxx = pcxGcc
+    result.nim = pncNim
+    result.d = pdcDmd
+    result.linker = plLd
+    case hostOS
+    of "Linux":
+        result.cc = pccGcc
+        result.cxx = pcxGcc
+    of "windows":
+        result.cc = pccMsvc
+        result.cxx = pcxMsvc
+        result.linker = plLink
+    of "macosx", "openbsd", "freebsd", "netbsd":
+        result.cc = pccClang
+        result.cxx = pcxClang
+        result.linker = plLld
+    else: discard
+
 proc initTasks*(): PkgTasks =
     result.build = default_build
     result.download = default_download
@@ -31,6 +52,7 @@ proc initPkgInstall*(): PkgInstall =
     result.pkg = pkg
 
 proc initPkgTarget*(): PkgTarget =
+    result.compilers = initPkgCompilers()
     case hostOS:
         of "linux": result.platform = ppLinux
         of "windows": result.platform = ppWin32

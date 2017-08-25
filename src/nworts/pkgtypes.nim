@@ -7,6 +7,15 @@ import uri
 import options
 import strutils
 
+
+type PkgOption* = object
+    name*: string
+    typ*: string
+    default*: string
+    value*: string
+
+type PkgOptions* = seq[PkgOption]
+
 type PkgPlatform* = enum
     ppWin32,
     ppLinux,
@@ -23,6 +32,37 @@ type PkgArch* = enum
     paamd64,
     paxarmv7,
     paarch64
+
+type PkgCCompiler* = enum
+    pccPcc,
+    pccTcc,
+    pccGcc,
+    pccClang,
+    pccMsvc,
+    pccIcc,
+    pccIcl,
+    pccClangcl
+
+type PkgNimCompiler* = enum
+    pncNim
+
+type PkgCXXCompiler* = enum
+    pcxGcc,
+    pcxClang,
+    pcxMsvc,
+    pcxIcc,
+    pcxIcl,
+    pcxClangcl
+
+type PkgDCompiler* = enum
+    pdcDmd,
+    pdcLdc
+
+type PkgLinker* = enum
+    plLink,
+    plLd,
+    plLld,
+    plGold
 
 type PkgBuildSystem* = enum
     pbsMeson,
@@ -51,6 +91,12 @@ type PkgBuildSystem* = enum
     pbsUnknown
 
 
+type PkgCompilers* = object
+    cc*: PkgCCompiler
+    cxx*: PkgCXXCompiler
+    nim*: PkgNimCompiler
+    d*: PkgDCompiler
+    linker*: PkgLinker
 
 
 
@@ -64,6 +110,7 @@ type PkgLayout* = object
 type PkgTarget* = object
     arch*: PkgArch
     platform*: PkgPlatform
+    compilers*: PkgCompilers
 
 
 ## `Pkg` is the main informational data structure
@@ -98,6 +145,9 @@ type
         target*: PkgTarget ## this is the kind of system the package should *run* on
         pkg*: Pkg
         layout*: PkgLayout
+
+
+
 
 macro `.`*(pkg: PkgInstall, field: string): untyped = 
     ## ^ This makes PkgInstall types act like contatinations

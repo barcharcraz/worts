@@ -4,14 +4,8 @@ import nre
 import logging
 import strfmt
 import strutils
-
-type PkgOption* = object
-    name*: string
-    typ*: string
-    default: string
-    value*: string
-
-type PkgOptions* = seq[PkgOption]
+import pkglayout
+import pkgtypes
 
 proc default*(self: PkgOption): string = self.default
 
@@ -33,10 +27,16 @@ proc initPkgOption*(name: string, typ: string, default: string): PkgOption =
     result.default = default
     result.value = default
 
-proc boost_defaultopts*(): PkgOptions =
+proc boost_defaultopts*(pkg: Pkg): PkgOptions =
     result = @[]
-    result.add initPkgOption("--prefix", "STRING", "")
-    result.add initPkgOption("--stagedir", "STRING", "")
+    var dirs = layout(pkg)
+    result.add initPkgOption("--prefix", "STRING", dirs.pkg_dir)
+    result.add initPkgOption("--stagedir", "STRING", dirs.build_dir)
+    result.add initPkgOption("toolset", "STRING", "gcc")
+    result.add initPkgOption("variant", "STRING", "debug")
+    result.add initPkgOption("link", "STRING", "static")
+    result.add initPkgOption("threading", "STRING", "multi")
+    result.add initPkgOption("runtime-link", "STRING", "shared")
 
 proc cmake_genopts*(cache: string): PkgOptions =
     ## ^ This generates options from a cmake cache file
