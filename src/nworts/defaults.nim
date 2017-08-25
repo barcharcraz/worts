@@ -39,7 +39,7 @@ proc cmake_install*(pkg: PkgInstall) =
 
 proc cmake_meta*(pkg: PkgInstall) =
   withDir pkg.build_dir:
-    shell $$"""cmake --system-information "${pkg.pkg_dir}/share/worts/${pkg.name}/META"  """
+    shell $$"""cmake -G"Ninja" --system-information "${pkg.pkg_dir}/share/worts/${pkg.name}/META"  """
 
 
 proc boost_build*(pkg: PkgInstall) =
@@ -59,7 +59,7 @@ proc default_download*(info: PkgInstall) =
 
 proc default_extract*(info: PkgInstall) =
   var filename = info.pkg.downloaded_filename()
-  shell $$"""bsdtar -C ${info.src_dir} -xf "${info.download_dir}/${filename}" """
+  shell $$"""bsdtar -C "${info.src_dir}" -xf "${info.download_dir}/${filename}" """
   var dirs = toSeq(walkDir(info.src_dir))
   if dirs.len == 1:
     echo "Moving directories"

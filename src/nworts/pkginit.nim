@@ -4,6 +4,7 @@ import pkgtypes
 import pkgexcept
 import strutils
 import defaults
+import pkglayout
 
 
 proc initPkgCompilers*(): PkgCompilers =
@@ -72,7 +73,7 @@ proc parseTargetSpec*(spec: string): PkgTarget =
 proc wort_defaults*(p: Pkg): PkgInstall =
     var p = p
     result.pkg = p
-    result.layout = layout(p, p.ver)
+    result.layout = layout(p)
     createDirs(result.layout)
     result.target = initPkgTarget()
 

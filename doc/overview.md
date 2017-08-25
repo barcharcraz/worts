@@ -1,5 +1,4 @@
-overview
-========
+# overview
 
 These are the docs for the nim version of worts and
 the associated libraries and utilities. the idea is that ports are written as nakefiles and then
@@ -9,8 +8,7 @@ does not need much of a runtime. A secondary goal is to understand build systems
 are available for a given package and which ones were selected. This inforamtion
 is used to make package development easier.
 
-versioning
-==========
+# versioning
 
 By default the latest version fo a package is installed, 
 we keep records of the release and hash of old versions though. To account for fixed bugs or

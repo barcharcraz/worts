@@ -11,21 +11,24 @@ base.download = default_download
 base.extract = default_extract
 base.platform = {}
 
-base.install = proc(pkg: PkgInstall) =
-  withDir(pkg.src_dir):
-    shell($$"""./b2 install --prefix="${pkg.pkg_dir}" """)
+
 
 var lpkg = base
 lpkg.platform = {ppLinux, ppBsd, ppDarwin}
 lpkg.prepare = proc(pkg: PkgInstall) =
   withDir(pkg.src_dir):
     shell("./bootstrap.sh")
+lpkg.install = proc(pkg: PkgInstall) =
+  withDir(pkg.src_dir):
+    shell($$"""./b2 install --prefix="${pkg.pkg_dir}" """)
 
 var wpkg = base
 wpkg.platform = {ppWin32}
 wpkg.prepare = proc(pkg: PkgInstall) =
   withDir(pkg.src_dir):
-    shell("./bootstrap.bat")
-
+    shell("bootstrap.bat")
+wpkg.install = proc(pkg: PkgInstall) =
+  withDir(pkg.src_dir):
+    shell($$"""b2 install --prefix="${pkg.pkg_dir}" """)
 
 proc pkg*(): auto = @[lpkg, wpkg]

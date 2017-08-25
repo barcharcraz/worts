@@ -28,11 +28,12 @@ proc exec*(pkg: Pkg, taskname: string, target: PkgTarget) =
 template allow_standalone*(pkg: Pkg) =
     when isMainModule:
         var args = commandLineParams()
+        var target = initPkgTarget()
         echo args
         if args.len == 0:
             echo format(pkg)
         else:
-            exec(pkg, args[0])
+            exec(pkg, args[0].string, target)
 
 template allow_multiple*(db: seq[Pkg]) =
     

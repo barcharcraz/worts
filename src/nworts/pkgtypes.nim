@@ -2,7 +2,6 @@
 import semver
 import macros
 import ospaths
-import pkgopts
 import uri
 import options
 import strutils

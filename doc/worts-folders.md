@@ -1,5 +1,4 @@
-Folders
-=========
+# Folders
 
 Worts installs things in folders. By default the root is at ~/.worts.
 inside this you will find:
