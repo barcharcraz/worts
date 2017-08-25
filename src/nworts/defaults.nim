@@ -1,5 +1,6 @@
 import pkgtypes
 import strfmt
+import osproc
 import nakelib
 import semver
 import sequtils
@@ -36,6 +37,12 @@ proc cmake_build*(pkg: PkgInstall) =
 proc cmake_install*(pkg: PkgInstall) =
   withDir pkg.build_dir:
     shell $$"cmake --build . --target install"
+
+proc cmake_edit*(pkg: PkgInstall) =
+  var exe = findExe("cmake-gui")
+  var process = startProcess(exe, pkg.build_dir,
+                            options = {poParentStreams})
+  discard waitForExit(process)
 
 proc cmake_meta*(pkg: PkgInstall) =
   withDir pkg.build_dir:
@@ -74,6 +81,13 @@ proc default_prepare*(pkg: PkgInstall) =
   of pbsBoostBuild: discard
   else:
     raise newException(BuildSystemUnsupportedException, "")
+
+proc default_edit*(pkg: PkgInstall) =
+  case pkg.build_sys
+  of pbsCmake: pkg.cmake_edit
+  else:
+    raise newException(BuildSystemUnsupportedException, "")
+
 
 proc default_build*(info: PkgInstall) = 
   case info.build_sys

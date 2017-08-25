@@ -32,3 +32,28 @@ proc `install=`*(pkg: var Pkg, body: proc(pkg: PkgInstall)) =
 
 proc `meta=`*(pkg: var Pkg, body: proc(pkg: PkgInstall)) =
     pkg.tasks.meta = body
+
+template download*(tgt: typed, body: untyped) =
+    tgt.tasks.download = proc (pkg: PkgInstall) = 
+        var pkg {.inject.} = pkg 
+        body
+
+template extract*(tgt: untyped, body: untyped) =
+    tgt.tasks.extract = proc (pkg: PkgInstall) = 
+        var pkg {.inject.} = pkg 
+        body
+
+template prepare*(tgt: typed, body: untyped) =
+    tgt.tasks.prepare = proc (pkg: PkgInstall) = 
+        var pkg {.inject.} = pkg 
+        body
+
+template build*(tgt: typed, body: untyped) =
+    tgt.tasks.build = proc (pkg: PkgInstall) = 
+        var pkg {.inject.} = pkg 
+        body
+    
+template install*(tgt: typed, body: untyped) =
+    tgt.tasks.install = proc (pkg: PkgInstall) = 
+        var pkg {.inject.} = pkg 
+        body
