@@ -136,6 +136,7 @@ type
         download*: proc(pkg: PkgInstall)
         extract*: proc(pkg: PkgInstall)
         prepare*: proc(pkg: PkgInstall)
+        edit*: proc(pkg: PkgInstall)
         build*: proc(pkg: PkgInstall)
         install*: proc(pkg: PkgInstall)
         meta*: proc(pkg: PkgInstall)

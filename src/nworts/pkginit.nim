@@ -30,6 +30,7 @@ proc initPkgCompilers*(): PkgCompilers =
 proc initTasks*(): PkgTasks =
     result.build = default_build
     result.download = default_download
+    result.edit = default_edit
     result.extract = default_extract
     result.install = default_install
     result.meta = default_meta

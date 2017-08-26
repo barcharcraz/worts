@@ -1,4 +1,6 @@
 
 
-proc back*[T](s: seq[T]): var T =
+proc back*[T](s: var seq[T]): var T =
     result = s[^1]
+
+

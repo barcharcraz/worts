@@ -52,7 +52,7 @@ proc cmake_genopts*(cache: string): PkgOptions =
 proc cmake_writeopts*(options: PkgOptions): string =
     result = ""
     for opt in options:
-        result &= opt.name & ":" & opt.typ & "=" & opt.value & "\n"
+        result &= opt.name & "=" & opt.value & "\n"
 
 proc cmake_readmeta*(meta: string): PkgOptions =
     const cachestart = """

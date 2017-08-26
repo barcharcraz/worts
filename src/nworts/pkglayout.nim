@@ -22,8 +22,8 @@ proc layout*(pkg: Pkg): PkgLayout =
         result.build_dir = blddir / pkgid / "build"
         result.src_dir = blddir / pkgid / "source"
         result.download_dir = basedir / "downloads"
-    
-    
+
+
 proc createDirs*(layout: PkgLayout) = 
     createDir layout.build_dir
     createDir layout.pkg_dir

@@ -5,8 +5,10 @@ import libiconv.libiconv
 import fmt.fmt
 import zlib.zlib
 import qt.qt
+import vimba.vimba
 import spdlog.spdlog
 import boost.build
+import oiio.oiio
 import boost.boost
 import gflags.gflags
 import libelektra.libelektra
@@ -25,5 +27,6 @@ db.add boost.pkg
 db.add gflags.pkg
 db.add yaml_cpp.pkg
 db.add libelektra.pkg
-
+db.add oiio.pkg
+db.add vimba.pkg
 allow_multiple db
