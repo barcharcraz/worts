@@ -15,28 +15,30 @@ proc `==`*(a: PkgOption, b: PkgOption): bool =
 proc `==`*(a: PkgOption, b: string): bool = 
     result = a.name == b
 
-proc initPkgOption*(name: string): PkgOption = 
-    result.name = name
-    result.typ = "BOOL"
-    result.default = "OFF"
-    result.value = result.default
-
-proc initPkgOption*(name: string, typ: string, default: string): PkgOption =
-    result.name = name
-    result.typ = typ
-    result.default = default
-    result.value = default
-
-proc boost_defaultopts*(pkg: Pkg): PkgOptions =
+proc boost_defaultopts*(): PkgOptions =
     result = @[]
-    var dirs = layout(pkg)
-    result.add initPkgOption("--prefix", "STRING", dirs.pkg_dir)
-    result.add initPkgOption("--stagedir", "STRING", dirs.build_dir)
-    result.add initPkgOption("toolset", "STRING", "gcc")
-    result.add initPkgOption("variant", "STRING", "debug")
-    result.add initPkgOption("link", "STRING", "static")
-    result.add initPkgOption("threading", "STRING", "multi")
-    result.add initPkgOption("runtime-link", "STRING", "shared")
+    result.add(("--layout", "tagged"))
+    result.add(("variant", "debug"))
+    result.add(("link", "static"))
+    result.add(("threading", "multi"))
+    result.add(("runtime-link", "shared"))
+
+proc boost_readopts*(cache: string): PkgOptions =
+    result = @[]
+    for line in cache.split(' '):
+        var parts = line.split('=')
+        if parts.len == 0: discard
+        elif parts.len == 1:
+            result.add((parts[0], ""))
+        else:
+            result.add((parts[0], parts[1]))
+
+proc boost_writeopts*(options: PkgOptions): string =
+    var optstrings: seq[string] = @[]
+    for opt in options:
+        if opt.value != "": optstrings.add(opt.name & "=" & opt.value)
+        else: optstrings.add(opt.name)
+    result = optstrings.join(" ")
 
 proc cmake_genopts*(cache: string): PkgOptions =
     ## ^ This generates options from a cmake cache file
@@ -46,7 +48,7 @@ proc cmake_genopts*(cache: string): PkgOptions =
     for match in cache.findIter(opt):
         var caps = match.captures()
         info("adding option {} of type {} with default {}".fmt(caps[0], caps[1], caps[2]))
-        var option = initPkgOption(caps[0], caps[1], caps[2])
+        var option = (caps[0], caps[2])
         result.add(option)
 
 proc cmake_writeopts*(options: PkgOptions): string =

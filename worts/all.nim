@@ -14,12 +14,14 @@ import gflags.gflags
 import libelektra.libelektra
 import yaml_cpp.yaml_cpp
 import semver
+import libtiff.libtiff
 
 var db: seq[Pkg] = @[]
 db.add qt.pkg()
 db.add spdlog.pkg
 db.add fmt.pkg
 db.add libarchive.pkg
+db.add libtiff.pkg
 db.add sqlite3.pkg
 db.add zlib.pkg
 db.add build.pkg()

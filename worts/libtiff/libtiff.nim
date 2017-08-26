@@ -1,14 +1,9 @@
-import nworts, sequtils, os, strfmt, nake
+import nworts, sequtils, os, strfmt
 
-var pkg = initPkgInstall()
+var pkg* = initPkg()
 pkg.name = "libtiff"
 pkg.license = "BSD"
 pkg.desc = "The tiff library and utilities"
-pkg.vers = @[
-    initPkgVer(
-        ver = "4.0.8",
-        url = "ftp://download.osgeo.org/libtiff/tiff-4.0.8.tar.gz",
-        hash = ""
-    )
-]
-pkg = wort_defaults pkg
+pkg.build_sys = pbsCmake
+pkg.ver = "4.0.8"
+pkg.url = "ftp://download.osgeo.org/libtiff/tiff-4.0.8.tar.gz"

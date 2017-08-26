@@ -7,11 +7,9 @@ import options
 import strutils
 
 
-type PkgOption* = object
-    name*: string
-    typ*: string
-    default*: string
-    value*: string
+type PkgOption* = tuple
+    name: string
+    value: string
 
 type PkgOptions* = seq[PkgOption]
 
