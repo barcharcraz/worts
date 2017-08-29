@@ -57,7 +57,7 @@ proc link*(fromdir: string, todir: string) =
         info("created", frm, "==>", to)
         var (dir, _, _) = splitFile(to)
         createDir(dir)
-        createSymlink(frm, to)
+        createSymlink(expandFilename(frm), expandFilename(to))
 proc unlink*(fromdir: string, todir: string) =
     var links: seq[link_desc]
     newSeq(links, 0)
