@@ -125,8 +125,6 @@ type
         desc*: string
         kind*: PkgType ## kind of package, source/binary
         build_sys*: PkgBuildSystem ## build system, used to select default task actions
-        bldplatforms*: set[PkgPlatform]
-        tgtplatforms*: set[PkgPlatform]
         options*: PkgOptions ## the options for a package
         tasks*: PkgTasks ## the tasks for a package, essentially a virtual table
     
