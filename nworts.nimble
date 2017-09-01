@@ -9,5 +9,8 @@ license       = "GPL3"
 requires "nim >= 0.17.1"
 requires "docopt"
 srcDir = "src"
-skipDirs = @["src/tools"]
-bin = @["tools/nstow"]
+skipDirs = @["tools"]
+
+task tools, "build nworts tools":
+  exec "nim c -o:nstow src/tools/nstow.nim "
+

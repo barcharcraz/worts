@@ -5,6 +5,7 @@ nimcache
 *.lib
 build
 pkg
+nstow
 source
 *.tar.gz
 *.tar.xz
