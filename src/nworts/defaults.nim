@@ -7,6 +7,7 @@ import sequtils
 import uri
 import pkgopts
 import pkgexcept
+import pkgenv
 import pkglayout
 
 
@@ -77,7 +78,10 @@ proc boost_install*(pkg: PkgInstall) =
 
 proc default_download*(info: PkgInstall) =
   var fname = info.pkg.downloaded_filename()
-  shell $$"""aria2c --allow-overwrite=true -d "${info.download_dir}" -o"${fname}" "${info.url}" """
+  var checksum = ""
+  if info.hash != "":
+    checksum = "--check-integrity=true --checksum=" & info.hash
+  shell $$"""aria2c ${checksum} -d "${info.download_dir}" -o"${fname}" "${info.url}" """
 
 
 proc default_extract*(info: PkgInstall) =
@@ -121,6 +125,7 @@ proc default_install*(pkg: PkgInstall) =
   of pbsBoostBuild: pkg.boost_install
   else:
     raise newException(BuildSystemUnsupportedException, "")
+  writeEnvFile(pkg)
 
 proc default_meta*(pkg: PkgInstall) =
   case pkg.build_sys

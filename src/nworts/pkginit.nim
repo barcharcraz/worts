@@ -44,6 +44,7 @@ proc initPkg*(): Pkg =
     result.arch = {low(PkgArch)..high(PkgArch)}
     result.rel = 1
     result.options = @[]
+    result.env = @[]
     result.kind = ptSource
     result.build_sys = pbsUnknown
     result.tasks = initTasks()

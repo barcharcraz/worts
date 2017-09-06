@@ -13,6 +13,12 @@ type PkgOption* = tuple
 
 type PkgOptions* = seq[PkgOption]
 
+type PkgEnvVar* = tuple
+    name: string
+    value: string
+
+type PkgEnvVars* = seq[PkgEnvVar]
+
 type PkgPlatform* = enum
     ppWin32,
     ppLinux,
@@ -118,14 +124,15 @@ type
         ver*: string
         url*: string
         hash*: string
-        arch*: set[PkgArch] ## the archetectures that this package can be built on
-        platform*: set[PkgPlatform] ## the platforms on which this package can be built
+        arch*: set[PkgArch] ## the archetectures for which this package can be built
+        platform*: set[PkgPlatform] ## the platforms for which this package can be built
         license*: string
         rel*: int
         desc*: string
         kind*: PkgType ## kind of package, source/binary
         build_sys*: PkgBuildSystem ## build system, used to select default task actions
         options*: PkgOptions ## the options for a package
+        env*: PkgEnvVars
         tasks*: PkgTasks ## the tasks for a package, essentially a virtual table
     
     PkgTasks* = object

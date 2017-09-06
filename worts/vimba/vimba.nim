@@ -9,6 +9,7 @@ p.ver = "2.1"
 p.desc = "Vimba sdk for allied vision cameras"
 p.rel = 1
 p.tasks = PkgTasks()
+p.hash = "sha-256=97b112282b136ab1f6f388136465665c4e8f2be208c921ad5ef009658fbee020"
 p.url = "https://www.alliedvision.com/fileadmin/content/software/software/Vimba/Vimba_v2.1_Linux.tgz"
 p.platform = {ppLinux}
 p.arch = {paamd64, pax86}
@@ -73,3 +74,5 @@ p.install:
   createDir(pkg.pkg_dir / "lib" / "vimba")
   copyFile(pkg.src_dir / "VimbaUSBTL" / "CTI" / get_vm_arch(pkg.target.arch) / "VimbaUSBTL.cti", pkg.pkg_dir / "lib" / "vimba" / "VimbaUSBTL.cti")
   copyFile(pkg.src_dir / "VimbaUSBTL" / "CTI" / get_vm_arch(pkg.target.arch) / "VimbaUSBTL.xml", pkg.pkg_dir / "lib" / "vimba" / "VimbaUSBTL.xml")
+
+allow_multiple pkg

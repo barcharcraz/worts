@@ -36,7 +36,6 @@ template allow_standalone*(pkg: Pkg) =
             exec(pkg, args[0].string, target)
 
 template allow_multiple*(db: seq[Pkg]) =
-    
     when isMainModule:
         var args = commandLineParams()
         echo args
@@ -50,7 +49,9 @@ template allow_multiple*(db: seq[Pkg]) =
         of 2..3:
             var matches = db.filter(args[0])
             matches.sort do (a: Pkg, b: Pkg) -> int:
-                cmp(parseVersion(a.ver), parseVersion(b.ver))
+                if parseVersion(a.ver) < parseVersion(b.ver): return 1
+                elif parseVersion(a.ver) > parseVersion(b.ver): return -1
+                else: return 0
             if matches.len == 0:
                 raise newException(PackageNotFoundException, "")
             if matches.len > 1:
