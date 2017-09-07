@@ -47,7 +47,7 @@ proc cmake_edit*(pkg: PkgInstall) =
 
 proc cmake_meta*(pkg: PkgInstall) =
   withDir pkg.build_dir:
-    shell $$"""cmake -G"Ninja" --system-information "${pkg.pkg_dir}/share/worts/${pkg.name}/META"  """
+    shell $$"""cmake -G"Ninja" --system-information "${pkg.pkg_dir}/share/worts/${pkg.name}/BUILDINFO.cmake"  """
 
 proc boost_prepare*(pkg: PkgInstall) =
   var opts = pkg.options
@@ -125,9 +125,10 @@ proc default_install*(pkg: PkgInstall) =
   of pbsBoostBuild: pkg.boost_install
   else:
     raise newException(BuildSystemUnsupportedException, "")
-  writeEnvFile(pkg)
+
 
 proc default_meta*(pkg: PkgInstall) =
+  writeEnvFile(pkg)
   case pkg.build_sys
   of pbsCmake: pkg.cmake_meta
   else:
