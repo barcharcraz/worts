@@ -31,4 +31,4 @@ wpkg.install = proc(pkg: PkgInstall) =
   withDir(pkg.src_dir):
     shell($$"""b2 install --prefix="${pkg.pkg_dir}" """)
 
-proc pkg*(): auto = @[lpkg, wpkg]
+var pkg* = [lpkg, wpkg]

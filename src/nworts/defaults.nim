@@ -1,8 +1,8 @@
 import pkgtypes
 import strfmt
 import osproc
-import nakelib
 import semver
+import os
 import sequtils
 import uri
 import pkgopts
@@ -10,8 +10,14 @@ import pkgexcept
 import pkgenv
 import pkglayout
 
+proc shell(body: string): bool {.discardable.} = 
+   result = execCmd(body) != ord(QuitFailure)
 
-
+template withDir(dir: string, body: untyped) =
+  var curdir = getCurrentDir()
+  setCurrentDir(dir)
+  body
+  setCurrentDir(curdir)
 
 proc autotools_prepare*(pkg: PkgInstall) =
   withDir pkg.build_dir:
