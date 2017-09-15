@@ -84,6 +84,7 @@ type PkgBuildSystem* = enum
     pbsGNUMake,
     pbsMake,
     pbsNmake,
+    pbsNone,
     pbsDub,
     pbsCargo,
     pbsMsbuild,

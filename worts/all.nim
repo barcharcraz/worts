@@ -16,9 +16,11 @@ import libelektra.libelektra
 import yaml_cpp.yaml_cpp
 import semver
 import libtiff.libtiff
+import wortenv
 
 
 var db: seq[Pkg] = @[]
+db.add wortenv.pkg
 db.add qt.pkg
 db.add spdlog.pkg
 db.add fmt.pkg

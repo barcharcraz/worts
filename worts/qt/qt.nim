@@ -68,4 +68,4 @@ wbin.arch = {paamd64, pax86}
 wbin.build = proc(pkg: PkgInstall) =
   shell($$"""${pkg.download_dir}/qt-opensource-windows-x86-${wbin.ver}.exe --script ${pkg.src_dir}/installscript.qs --no-force-installations""")
 
-var pkg* {.exportc.} = [lbin, wbin]
+var pkg* = [lbin, wbin]

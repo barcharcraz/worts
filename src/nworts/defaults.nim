@@ -102,6 +102,7 @@ proc default_extract*(info: PkgInstall) =
 
 proc default_prepare*(pkg: PkgInstall) =
   case pkg.build_sys
+  of pbsNone: discard
   of pbsCmake: pkg.cmake_prepare
   of pbsAutotools: pkg.autotools_prepare
   of pbsBoostBuild: pkg.boost_prepare
@@ -110,6 +111,7 @@ proc default_prepare*(pkg: PkgInstall) =
 
 proc default_edit*(pkg: PkgInstall) =
   case pkg.build_sys
+  of pbsNone: discard
   of pbsCmake: pkg.cmake_edit
   of pbsBoostBuild: pkg.boost_edit
   else:
@@ -118,6 +120,7 @@ proc default_edit*(pkg: PkgInstall) =
 
 proc default_build*(info: PkgInstall) = 
   case info.build_sys
+  of pbsNone: discard
   of pbsCmake: info.cmake_build
   of pbsAutotools: info.autotools_build
   of pbsBoostBuild: info.boost_build
@@ -126,6 +129,7 @@ proc default_build*(info: PkgInstall) =
 
 proc default_install*(pkg: PkgInstall) = 
   case pkg.build_sys
+  of pbsNone: discard
   of pbsCmake: pkg.cmake_install
   of pbsAutotools: pkg.autotools_install
   of pbsBoostBuild: pkg.boost_install
@@ -136,6 +140,7 @@ proc default_install*(pkg: PkgInstall) =
 proc default_meta*(pkg: PkgInstall) =
   writeEnvFile(pkg)
   case pkg.build_sys
+  of pbsNone: discard
   of pbsCmake: pkg.cmake_meta
   else:
     raise newException(BuildSystemUnsupportedException, "")
