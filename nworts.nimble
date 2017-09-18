@@ -7,9 +7,15 @@ license       = "GPL3"
 
 # Dependencies
 requires "nim >= 0.17.1"
+requires "semver"
+requires "strfmt"
 requires "docopt"
+requires "moustachu"
 srcDir = "src"
-skipDirs = @["tools"]
+bin = @["tools/dumpmeta",
+        "tools/nenv",
+        "tools/lspkgs",
+        "tools/nstow"]
 
 task tools, "build nworts tools":
   exec "nim c -o:nstow src/tools/nstow.nim "

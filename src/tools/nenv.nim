@@ -1,4 +1,6 @@
 import os
+import parsecfg
+import sequtils
 const helpmsg = """
 nenv.
 
@@ -6,7 +8,7 @@ nenv is a virtualenv like environment variable manager.
 
 Usage:
   nenv list [options]
-  nenv activate [options] <env_name>
+  nenv run [options] <env_name> <command_name>
   nenv dump
 
 Options:
@@ -19,14 +21,32 @@ Options:
 import docopt
 import strutils
 import moustachu
-const fish_script = """
-begin
-  {{#vars}}
-  set -lx {{name}} {{value}}
-  {{/vars}}
-  fish
-end
+import tables
+const output = """
+{{#vars}}
+{{name}}={{value}}
+{{/vars}}
 """
+
+proc fixup_vars(prefix: string, envpath: string): OrderedTableRef[string, string] =
+  ## take an env file with relative paths and fix it up
+  ## relative to the prefix
+  var envcfg = loadConfig(envpath)
+  for key, value in envcfg[""]:
+    if value[0] == '/':
+      envcfg.setSectionKey("", key, prefix / value)
+  result = envcfg[""]
+
+proc merge_vars(a, b: OrderedTableRef): OrderedTableRef =
+  result = newOrderedTable()
+  result[] = a[]
+  for key, value in b:
+    if key notin result:
+      result.add(key, value)
+    else:
+      result[key] = result[key] & PathSep & value
+
+
 proc main() =
   let args = docopt(helpmsg, version="nenv 1.0")
   var target = $args["--target"]
@@ -42,28 +62,20 @@ proc main() =
     if not (existsDir(target / "share/worts") or symlinkExists(target / "share/worts")):
       return
     for kind, path in walkDir(target / "share/worts"):
-      if kind == pcDir and existsFile(path / "ENV"):
+      if kind in {pcDir, pcLinkToDir} and existsFile(path / "ENV"):
         echo splitPath(path).tail
-  if args["activate"]:
+  if args["run"]:
     var path = target / "share/worts" / $args["<env_name>"] / "ENV"
     if not existsFile(path):
       echo "ERROR: env does not exist. try nstow list"
       quit(QuitFailure)
     if existsEnv("NENV_ACTIVE"):
       echo "ERROR: you can't nest environments, activate more at once"
-    var ctx = newContext()
-    var sections = newSeq[Context]()
-    for line in lines(path):
-      var splits = line.split('=')
-      var section = newContext()
-      section["name"] = splits[0]
-      if splits[1][0] == '/':
-        section["value"] = target / splits[1]
-      else:
-        section["value"] = splits[1]
-      sections.add section
-    ctx["vars"] = sections
-    echo render(fish_script, ctx)
+    var envVars = fixup_vars(target, path)
+    var currentEnv = newOrderedTable[string, string]()
+    currentEnv[] = toOrderedTable(toSeq(envPairs()))
+    var env = merge_vars(currentEnv, envVars)
+
 
   
 
