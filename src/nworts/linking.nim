@@ -2,6 +2,7 @@
 import os
 import logging
 
+
 type link_desc = tuple
     frm: string
     to: string
@@ -51,6 +52,7 @@ proc build_unlink_list*(fromdir: string, todir: string, links: var seq[link_desc
 proc link*(fromdir: string, todir: string) =
     var links: seq[link_desc]
     newSeq(links, 0)
+    debug("Linking ", fromdir)
     build_link_list(fromdir, todir, links)
     echo links
     for frm, to in links.items:
@@ -62,6 +64,8 @@ proc unlink*(fromdir: string, todir: string) =
     var links: seq[link_desc]
     newSeq(links, 0)
     build_unlink_list(fromdir, todir, links)
+    for frm, to in links.items:
+        debug("found link: ", frm, " -> ", to)
     for frm, to in links.items:
         info("deleted", to)
         removeFile(to)

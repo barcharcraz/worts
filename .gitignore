@@ -5,6 +5,10 @@ nimcache
 *.lib
 build
 pkg
+nenv
+lspkgs
+dumpmeta
+all
 nstow
 source
 *.tar.gz
