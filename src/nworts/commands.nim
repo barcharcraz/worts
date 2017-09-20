@@ -19,23 +19,28 @@ import pkginit
 import semver
 import sequtils
 
+
+
+
 template default_options*() =
     option prefix, string, "prefix", "", expandTilde("~/.worts")
     option editopt, bool, "edit", "e", false
 
 template default_commandline*() =
     argument task, string
+    option version, string, "ver", "v", "latest"
+    option platform, string, "platform", "p", hostOS
+    option options, string, "options", "o", ""
 
 template multi_default_commandline*() =
     subcommand list, "list": discard
     argument name, string
-    option version, string, "ver", "v", "latest"
-    option platform, string, "platform", "p", hostOS
-    option options, string, "options", "o", ""
+
+    
+template do_package_command(pkg: Pkg) =
     
 
-
-template allow_standalone*(pkg: Pkg) =
+template allow_standalone*(pkg: seq[Pkg]) =
     when isMainModule:
         commandline:
             default_options()
@@ -114,3 +119,14 @@ template allow_multiple*(db: seq[Pkg]) =
                 else: discard
             else:
                 print_packages(results)
+
+
+template export_package*(pkg_body: untyped) =
+    proc pkg*(): seq[Pkg] {.gensym.} = 
+        result = @[]
+        result.add(pkg_body) 
+    when appType == "lib":
+        proc nworts_pkg*(): seq[Pkg] {.exportc, inject.} =
+            result = pkg()
+    when appType == "console":
+        allow_standalone(pkg())
