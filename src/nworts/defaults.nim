@@ -10,8 +10,10 @@ import pkgexcept
 import pkgenv
 import pkglayout
 
-proc shell(body: string): bool {.discardable.} = 
-   result = execCmd(body) != ord(QuitFailure)
+proc shell(body: string) = 
+   var result = execCmd(body)
+   if result == QuitFailure:
+    raise newException(SystemError, "command failed [" & body & "]")
 
 template withDir(dir: string, body: untyped) =
   var curdir = getCurrentDir()
@@ -92,7 +94,7 @@ proc default_download*(info: PkgInstall) =
 
 proc default_extract*(info: PkgInstall) =
   var filename = info.pkg.downloaded_filename()
-  shell $$"""bsdtar -C "${info.src_dir}" -xf "${info.download_dir}/${filename}" """
+  shell $$"""bsdtar -C "${info.src_dir}" -xvf "${info.download_dir}/${filename}" """
   var dirs = toSeq(walkDir(info.src_dir))
   if dirs.len == 1:
     echo "Moving directories"

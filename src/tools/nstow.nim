@@ -12,7 +12,7 @@ Options:
     -S              Stow
     -R              Restow
     -t, --target=<target-dir>    Target directory [default: STOW_DIR/..]
-    -d, --dir=<source-dir> Source directory [default: STOW_DIR]
+    -d, --dir=<source-dir>       Source directory [default: STOW_DIR]
 """
 
 import strutils
@@ -26,19 +26,23 @@ if args["-v"]:
 else:
     addHandler(newConsoleLogger(lvlError))
 
-var fromdir = ""
-if existsEnv("STOW_DIR"):
-    fromdir = getEnv("STOW_DIR")
-else:
-    fromdir = getCurrentDir()
-var todir = ""
-if args.hasKey("--target"): fromdir = $args["--target"]
-
-
-todir = fromdir.parentDir()
-if args.haskey("--dir"): todir = $args["--dir"]
+var fromdir = $args["--dir"]
+debug(fromdir)
+if fromdir == "STOW_DIR":
+    debug("Fromdir not set explicitly")
+    if existsEnv("STOW_DIR"):
+        debug("Using Stow dir")
+        fromdir = getEnv("STOW_DIR")
+    else:
+        debug("Using Current dir")
+        fromdir = getCurrentDir()
+var todir = $args["--target"]
+if todir == "STOW_DIR/..":
+    todir = fromdir.parentDir()
 
 fromdir = fromdir / $args["<pkg_name>"]
+debug("From: ", fromdir)
+debug("To: ", todir)
 if args["-D"]:
     unlink(fromdir, todir)
 elif args["-R"]:

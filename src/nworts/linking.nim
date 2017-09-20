@@ -13,7 +13,6 @@ proc build_link_list*(fromdir: string, todir: string, links: var seq[link_desc])
     for kind, path in walkDir(fromdir):
         var relative = path[len(fromdir)..^1]
         var target = todir / relative
-        echo target
         case kind
         of pcFile:
             var (dir, _, _) = splitFile(target)
@@ -54,16 +53,17 @@ proc link*(fromdir: string, todir: string) =
     newSeq(links, 0)
     debug("Linking ", fromdir)
     build_link_list(fromdir, todir, links)
-    echo links
     for frm, to in links.items:
         info("created", frm, "==>", to)
         var (dir, _, _) = splitFile(to)
         createDir(dir)
         createSymlink(expandFilename(frm), expandFilename(to))
 proc unlink*(fromdir: string, todir: string) =
+    debug("Unlink")
     var links: seq[link_desc]
     newSeq(links, 0)
     build_unlink_list(fromdir, todir, links)
+    debug(links)
     for frm, to in links.items:
         debug("found link: ", frm, " -> ", to)
     for frm, to in links.items:

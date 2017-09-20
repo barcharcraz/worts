@@ -10,12 +10,13 @@ import pkglayout
 import os
 import pkgexcept
 import terminal
+import commandeer
 import algorithm
+import parseopt2
 import pkgfmt
 import strutils
 import pkginit
 import semver
-import commandeer
 import sequtils
 
 template default_options*() =
@@ -61,6 +62,7 @@ template allow_standalone*(pkg: Pkg) =
         of "meta": pkg.tasks.meta(instinfo)
         else: discard
 
+
 template allow_multiple*(db: seq[Pkg]) =
     block:
         when isMainModule:
@@ -92,6 +94,7 @@ template allow_multiple*(db: seq[Pkg]) =
                 var pkg = results[0]
                 instinfo.pkg = pkg
                 instinfo.layout = layout(pkg, prefix)
+                createDirs(instinfo.layout)
                 case task
                 of "all":
                     pkg.tasks.download(instinfo)

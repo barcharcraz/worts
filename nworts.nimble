@@ -11,6 +11,7 @@ requires "semver"
 requires "strfmt"
 requires "docopt"
 requires "moustachu"
+requires "commandeer"
 srcDir = "src"
 bin = @["tools/dumpmeta",
         "tools/nenv",
