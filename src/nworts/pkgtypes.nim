@@ -23,7 +23,8 @@ type PkgPlatform* = enum
     ppWin32,
     ppLinux,
     ppBsd,
-    ppDarwin
+    ppDarwin,
+    ppUnknown
 
 type PkgType* = enum
     ptSource, ## source from upstream
@@ -146,7 +147,6 @@ type
         meta*: proc(pkg: PkgInstall)
 
     PkgInstall* = object
-        target*: PkgTarget ## this is the kind of system the package should *run* on
         pkg*: Pkg
         layout*: PkgLayout
 
@@ -183,3 +183,13 @@ proc downloaded_filename*(pkg: Pkg): string =
     result = pkg.name & "-" & pkg.ver & "." & ext
 
 
+
+proc parsePlatform*(platform: string): PkgPlatform =
+    ## simply returns the platform corosponding to the current host
+    case platform 
+    of "windows": result = ppWin32
+    of "macosx": result = ppDarwin
+    of "netbsd","freebsd","openbsd": result = ppBsd
+    of "linux": result = ppLinux
+    else: result = ppUnknown
+proc hostPackagePlatform*(): PkgPlatform = parsePlatform(hostOS)

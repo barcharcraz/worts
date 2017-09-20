@@ -4,7 +4,9 @@ import logging
 import pkgdb
 import pkgtypes
 import defaults
+import pkginit
 import typeinfo
+import pkglayout
 import os
 import pkgexcept
 import terminal
@@ -13,51 +15,99 @@ import pkgfmt
 import strutils
 import pkginit
 import semver
+import commandeer
 import sequtils
 
-proc exec*(pkg: Pkg, taskname: string, target: PkgTarget) =
-    var installInfo = wort_defaults pkg
-    installInfo.target = target
-    for name, val in pkg.tasks.fieldPairs():
-        if name == taskname: val(installInfo)
-        elif taskname == "all" and val != nil:
-            styledEcho( fgYellow, "📦", resetStyle, ": executing " & name )
-            val(installInfo)
+template default_options*() =
+    option prefix, string, "prefix", "", expandTilde("~/.worts")
+    option editopt, bool, "edit", "e", false
+
+template default_commandline*() =
+    argument task, string
+
+template multi_default_commandline*() =
+    subcommand list, "list": discard
+    argument name, string
+    option version, string, "ver", "v", "latest"
+    option platform, string, "platform", "p", hostOS
+    option options, string, "options", "o", ""
+    
 
 
 template allow_standalone*(pkg: Pkg) =
     when isMainModule:
-        var args = commandLineParams()
-        var target = initPkgTarget()
-        echo args
-        if args.len == 0:
-            echo format(pkg)
-        else:
-            exec(pkg, args[0].string, target)
+        commandline:
+            default_options()
+            default_commandline()
+        
+        var instinfo: PkgInstall
+        instinfo.pkg = pkg
+        instinfo.layout = layout(pkg, prefix)
+        case task
+        of "doall":
+            pkg.tasks.download(instinfo)
+            pkg.tasks.extract(instinfo)
+            pkg.tasks.prepare(instinfo)
+            if editopt: pkg.tasks.edit(instinfo)
+            pkg.tasks.build(instinfo)
+            pkg.tasks.install(instinfo)
+            pkg.tasks.meta(instinfo)
+        of "download": pkg.tasks.download(instinfo)
+        of "extract": pkg.tasks.extract(instinfo)
+        of "prepare": pkg.tasks.prepare(instinfo)
+        of "edit": pkg.tasks.edit(instinfo)
+        of "build": pkg.tasks.build(instinfo)
+        of "install": pkg.tasks.install(instinfo)
+        of "meta": pkg.tasks.meta(instinfo)
+        else: discard
 
 template allow_multiple*(db: seq[Pkg]) =
-    when isMainModule:
-        var args = commandLineParams()
-        echo args
-        case args.len
-        of 0:
-            for pkg in db:
-                echo format(pkg)
-        of 1:
-            for pkg in db.filter(args[0]):
-                echo format(pkg)
-        of 2..3:
-            var matches = db.filter(args[0])
-            matches.sort do (a: Pkg, b: Pkg) -> int:
-                if parseVersion(a.ver) < parseVersion(b.ver): return 1
-                elif parseVersion(a.ver) > parseVersion(b.ver): return -1
-                else: return 0
-            if matches.len == 0:
-                raise newException(PackageNotFoundException, "")
-            if matches.len > 1:
-                raise newException(PackageNotUniqueException, "")
-            var target = initPkgTarget()
-            if args.len == 3: target = parseTargetSpec(args[2])
-            exec(matches[0], args[1], target)
-        else:
-            raise newException(ValueError, "")
+    block:
+        when isMainModule:
+            commandLine:
+                default_options()
+                multi_default_commandline()
+                default_commandline()
+            
+            if list:
+                print_packages(db)
+            var results = db.filter do (pkg: Pkg) -> bool:
+                result = parsePlatform(platform) in pkg.platform
+                result = result and pkg.name == name
+                if version != "latest":
+                    result = result and pkg.ver == version
+            
+            results.sort do (x,y: Pkg) -> int:
+                var xparts = split(x.ver, {'.', '-'})
+                var yparts = split(y.ver, {'.', '-'})
+                for xpart, ypart in zip(xparts, yparts).items():
+                    var xf = parseFloat(xpart)
+                    var yf = parseFloat(ypart)
+                    result = cmp(xf, yf)
+                    if result != 0: break
+            case results.len()
+            of 0: echo "no matching packages"
+            of 1:
+                var instinfo: PkgInstall
+                var pkg = results[0]
+                instinfo.pkg = pkg
+                instinfo.layout = layout(pkg, prefix)
+                case task
+                of "all":
+                    pkg.tasks.download(instinfo)
+                    pkg.tasks.extract(instinfo)
+                    pkg.tasks.prepare(instinfo)
+                    if editopt: pkg.tasks.edit(instinfo)
+                    pkg.tasks.build(instinfo)
+                    pkg.tasks.install(instinfo)
+                    pkg.tasks.meta(instinfo)
+                of "download": pkg.tasks.download(instinfo)
+                of "extract": pkg.tasks.extract(instinfo)
+                of "prepare": pkg.tasks.prepare(instinfo)
+                of "edit": pkg.tasks.edit(instinfo)
+                of "build": pkg.tasks.build(instinfo)
+                of "install": pkg.tasks.install(instinfo)
+                of "meta": pkg.tasks.meta(instinfo)
+                else: discard
+            else:
+                print_packages(results)

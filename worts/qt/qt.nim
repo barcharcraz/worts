@@ -15,20 +15,21 @@ base.download = default_download
 
 
 proc get_instdir(pkg: PkgInstall): string =
-  case pkg.platform
-  of ppLinux:
+  doAssert(card(pkg.pkg.platform) == 1)
+  doAssert(card(pkg.pkg.arch) == 1)
+  if pkg.platform == {ppLinux}:
     result = "gcc"
-  of ppWin32:
+  elif pkg.platform == {ppWin32}:
     result = "msvc2017"
   else:
     raise newException(PlatformUnsupportedException, "")
-  case pkg.arch
-    of paamd64: result = result & "_64"
-    else: raise newException(PlatformUnsupportedException, "")
+  if pkg.arch == {paamd64}: result = result & "_64"
+  else: raise newException(PlatformUnsupportedException, "")
 
 proc get_qplat(pkg: PkgInstall): string =
-  case pkg.platform
-  of ppWin32: result = "win64_" & get_instdir(pkg)
+  doAssert(card(pkg.pkg.platform) == 1)
+  doAssert(card(pkg.pkg.arch) == 1)
+  if pkg.platform == {ppWin32}: result = "win64_" & get_instdir(pkg)
   else: result = get_instdir(pkg)
 
 

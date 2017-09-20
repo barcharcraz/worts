@@ -52,30 +52,12 @@ proc initPkgInstall*(): PkgInstall =
     var pkg = initPkg()
     result.pkg = pkg
 
-proc initPkgTarget*(): PkgTarget =
-    result.compilers = initPkgCompilers()
-    case hostOS:
-        of "linux": result.platform = ppLinux
-        of "windows": result.platform = ppWin32
-        else: raise newException(PlatformUnsupportedException, "")
-  
-    case hostCPU:
-        of "amd64": result.arch = paamd64
-        else: raise newException(PlatformUnsupportedException, "")
-
-proc parseTargetSpec*(spec: string): PkgTarget =
-    var target = spec.split(":")
-    result = initPkgTarget()
-    for item in target[0..high(target)]:
-        if item.startsWith("pa"): result.arch = parseEnum[PkgArch](item)
-        if item.startsWith("pp"): result.platform = parseEnum[PkgPlatform](item) 
 
 proc wort_defaults*(p: Pkg): PkgInstall =
     var p = p
     result.pkg = p
     result.layout = layout(p)
     createDirs(result.layout)
-    result.target = initPkgTarget()
 
     when defined(isolated):
         # when isolated is defined we do our best to be self

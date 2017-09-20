@@ -21,20 +21,10 @@ proc print_packages*(db: seq[Pkg]) =
         echo format(pkg)
 
 
-proc filter*(db: seq[Pkg], flt: string): seq[Pkg] =
-    result = db.filter do (item: Pkg) -> bool:
-        var splitstr = flt.split(":")
-        var v = v"0.0.0"
-        for elm in splitstr:
-            if elm[0] == 'v':
-                v = parseVersion(elm[1..^1])
-        var tgtspec = join(splitstr[1..high(splitstr)], ":")
-        
-        var target = parseTargetSpec(tgtspec)
+proc filter*(db: seq[Pkg], version: string, platform: Option[PkgPlatform]): seq[Pkg] =
+    var plat = hostPackagePlatform()
+    if isSome(platform): plat = platform.get()
+    
 
-        result = item.name == splitstr[0]
-        if v != v"0.0.0": result = result and parseVersion(item.ver) == v
-        result = result and target.platform in item.platform
-        result = result and target.arch in item.arch
 
 
