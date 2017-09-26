@@ -64,7 +64,9 @@ p.install:
   createDir(pkg.pkg_dir / "lib" / "vimba")
   copyFile(pkg.src_dir / "VimbaGigETL" / "CTI" / "x86_64bit" / "VimbaGigETL.cti", pkg.pkg_dir / "lib" / "vimba" / "VimbaGigETL.cti")
   copyFile(pkg.src_dir / "VimbaGigETL" / "CTI" / "x86_64bit" / "VimbaGigETL.xml", pkg.pkg_dir / "lib" / "vimba" / "VimbaGigETL.xml")
-
+p.env = @{
+  "GENICAM_GENTL64_PATH": "/lib/vimba"
+}
 pkg.add p
 
 p.arch = {pax86}
@@ -72,6 +74,9 @@ p.install:
   createDir(pkg.pkg_dir / "lib" / "vimba")
   copyFile(pkg.src_dir / "VimbaGigETL" / "CTI" / "x86_32" / "VimbaGigETL.cti", pkg.pkg_dir / "lib" / "vimba" / "VimbaGigETL.cti")
   copyFile(pkg.src_dir / "VimbaGigETL" / "CTI" / "x86_32" / "VimbaGigETL.xml", pkg.pkg_dir / "lib" / "vimba" / "VimbaGigETL.xml")
+p.env = @{
+  "GENICAM_GENTL32_PATH": "/lib/vimba"
+}
 pkg.add p
 
 p.name = "VimbaUSBTL"
@@ -80,6 +85,9 @@ p.install:
   createDir(pkg.pkg_dir / "lib" / "vimba")
   copyFile(pkg.src_dir / "VimbaUSBTL" / "CTI" / "x86_64" / "VimbaUSBTL.cti", pkg.pkg_dir / "lib" / "vimba" / "VimbaUSBTL.cti")
   copyFile(pkg.src_dir / "VimbaUSBTL" / "CTI" / "x86_64" / "VimbaUSBTL.xml", pkg.pkg_dir / "lib" / "vimba" / "VimbaUSBTL.xml")
+p.env = @{
+  "GENICAM_GENTL64_PATH": "/lib/vimba"
+}
 pkg.add p
 
 p.arch = {pax86}
@@ -87,5 +95,7 @@ p.install:
   createDir(pkg.pkg_dir / "lib" / "vimba")
   copyFile(pkg.src_dir / "VimbaUSBTL" / "CTI" / "x86_32" / "VimbaUSBTL.cti", pkg.pkg_dir / "lib" / "vimba" / "VimbaUSBTL.cti")
   copyFile(pkg.src_dir / "VimbaUSBTL" / "CTI" / "x86_32" / "VimbaUSBTL.xml", pkg.pkg_dir / "lib" / "vimba" / "VimbaUSBTL.xml")
-
+p.env = @{
+  "GENICAM_GENTL32_PATH": "/lib/vimba"
+}
 allow_multiple pkg

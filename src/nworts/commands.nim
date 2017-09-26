@@ -37,10 +37,8 @@ template multi_default_commandline*() =
     argument name, string
 
     
-template do_package_command(pkg: Pkg) =
-    
 
-template allow_standalone*(pkg: seq[Pkg]) =
+template allow_standalone*(pkg: Pkg) =
     when isMainModule:
         commandline:
             default_options()
@@ -122,11 +120,12 @@ template allow_multiple*(db: seq[Pkg]) =
 
 
 template export_package*(pkg_body: untyped) =
-    proc pkg*(): seq[Pkg] {.gensym.} = 
+    proc pkg*(): seq[Pkg] {.gensym, inject.} = 
         result = @[]
         result.add(pkg_body) 
     when appType == "lib":
         proc nworts_pkg*(): seq[Pkg] {.exportc, inject.} =
             result = pkg()
     when appType == "console":
-        allow_standalone(pkg())
+        var packages = pkg()
+        allow_multiple(packages)

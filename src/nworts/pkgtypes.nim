@@ -19,25 +19,25 @@ type PkgEnvVar* = tuple
 
 type PkgEnvVars* = seq[PkgEnvVar]
 
-type PkgPlatform* = enum
+type PkgPlatform* {.size: 4.} = enum
     ppWin32,
     ppLinux,
     ppBsd,
     ppDarwin,
     ppUnknown
 
-type PkgType* = enum
+type PkgType* {.size: 4.} = enum
     ptSource, ## source from upstream
     ptBinary, ## binary from upstream
     ptPackage ## unused for now, possibly binary from wort
 
-type PkgArch* = enum
+type PkgArch* {.size: 4.} = enum
     pax86,
     paamd64,
     paxarmv7,
     paarch64
 
-type PkgCCompiler* = enum
+type PkgCCompiler* {.size: 4.} = enum
     pccPcc,
     pccTcc,
     pccGcc,
@@ -47,10 +47,10 @@ type PkgCCompiler* = enum
     pccIcl,
     pccClangcl
 
-type PkgNimCompiler* = enum
+type PkgNimCompiler* {.size: 4.} = enum
     pncNim
 
-type PkgCXXCompiler* = enum
+type PkgCXXCompiler* {.size: 4.} = enum
     pcxGcc,
     pcxClang,
     pcxMsvc,
@@ -58,17 +58,17 @@ type PkgCXXCompiler* = enum
     pcxIcl,
     pcxClangcl
 
-type PkgDCompiler* = enum
+type PkgDCompiler* {.size: 4.} = enum
     pdcDmd,
     pdcLdc
 
-type PkgLinker* = enum
+type PkgLinker* {.size: 4.} = enum
     plLink,
     plLd,
     plLld,
     plGold
 
-type PkgBuildSystem* = enum
+type PkgBuildSystem* {.size: 4.} = enum 
     pbsMeson,
     pbsCmake
     pbsNim,
