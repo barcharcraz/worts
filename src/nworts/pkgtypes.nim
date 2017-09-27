@@ -169,12 +169,9 @@ macro `.`*(pkg: PkgInstall, field: string): untyped =
 template `.=`*(pkg: PkgInstall, field: string, rval: untyped) =
     `.`(pkg, field) = rval
 
-
 proc downloaded_filename*(pkg: Pkg): string = 
     var path = parseUri(pkg.url).path
     var exts = path.split(ExtSep)
-    if exts[^1] == "meta4":
-        exts = exts[0..^2]
     var ext = ""
     if exts[^2] == "tar":
         ext = exts[^2..^1].join($ExtSep)
