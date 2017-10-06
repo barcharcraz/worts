@@ -14,22 +14,22 @@ import pkgtypes
 
 
 
-proc `download=`*(pkg: var Pkg, body: proc(pkg: PkgInstall)) =
+proc `download=`*(pkg: var Pkg, body: proc(pkg: PkgInstall) {.nimcall.}) =
     pkg.tasks.download = body
 
-proc `extract=`*(pkg: var Pkg, body: proc(pkg: PkgInstall)) =
+proc `extract=`*(pkg: var Pkg, body: proc(pkg: PkgInstall) {.nimcall.}) =
     pkg.tasks.extract = body
 
-proc `prepare=`*(pkg: var Pkg, body: proc(pkg: PkgInstall)) =
+proc `prepare=`*(pkg: var Pkg, body: proc(pkg: PkgInstall) {.nimcall.}) =
     pkg.tasks.prepare = body
 
-proc `build=`*(pkg: var Pkg, body: proc(pkg: PkgInstall)) =
+proc `build=`*(pkg: var Pkg, body: proc(pkg: PkgInstall) {.nimcall.}) =
     pkg.tasks.build = body
 
-proc `install=`*(pkg: var Pkg, body: proc(pkg: PkgInstall)) =
+proc `install=`*(pkg: var Pkg, body: proc(pkg: PkgInstall) {.nimcall.}) =
     pkg.tasks.install = body
 
-proc `meta=`*(pkg: var Pkg, body: proc(pkg: PkgInstall)) =
+proc `meta=`*(pkg: var Pkg, body: proc(pkg: PkgInstall) {.nimcall.}) =
     pkg.tasks.meta = body
 
 template download*(tgt: typed, body: untyped) =

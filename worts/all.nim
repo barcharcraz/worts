@@ -30,7 +30,7 @@ db.add sqlite3.pkg
 db.add zlib.pkg
 db.add build.pkg
 db.add boost.pkg
-db.add gflags.pkg
+db.add gflags.pkg()
 db.add yaml_cpp.pkg
 db.add libelektra.pkg
 db.add oiio.pkg

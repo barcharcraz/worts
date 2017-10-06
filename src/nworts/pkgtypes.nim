@@ -138,13 +138,13 @@ type
         tasks*: PkgTasks ## the tasks for a package, essentially a virtual table
     
     PkgTasks* = object
-        download*: proc(pkg: PkgInstall)
-        extract*: proc(pkg: PkgInstall)
-        prepare*: proc(pkg: PkgInstall)
-        edit*: proc(pkg: PkgInstall)
-        build*: proc(pkg: PkgInstall)
-        install*: proc(pkg: PkgInstall)
-        meta*: proc(pkg: PkgInstall)
+        download*: proc(pkg: PkgInstall) {.nimcall.}
+        extract*: proc(pkg: PkgInstall) {.nimcall.}
+        prepare*: proc(pkg: PkgInstall) {.nimcall.}
+        edit*: proc(pkg: PkgInstall) {.nimcall.}
+        build*: proc(pkg: PkgInstall) {.nimcall.}
+        install*: proc(pkg: PkgInstall) {.nimcall.}
+        meta*: proc(pkg: PkgInstall) {.nimcall.}
 
     PkgInstall* = object
         pkg*: Pkg

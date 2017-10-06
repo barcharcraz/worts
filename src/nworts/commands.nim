@@ -120,7 +120,7 @@ template allow_multiple*(db: seq[Pkg]) =
 
 
 template export_package*(pkg_body: untyped) =
-    proc pkg*(): seq[Pkg] {.gensym, inject.} = 
+    proc pkg*(): seq[Pkg] {.inject.} = 
         result = @[]
         result.add(pkg_body) 
     when appType == "lib":
