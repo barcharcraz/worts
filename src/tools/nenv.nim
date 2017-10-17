@@ -78,10 +78,10 @@ proc main() =
 
   if args["list"]:
     echo "Listing:"
-    if not (existsDir(target / "share/worts") or symlinkExists(target / "share/worts")):
+    if not (existsDir(target / "share/nenv") or symlinkExists(target / "share/nenv")):
       return
-    for kind, path in walkDir(target / "share/worts"):
-      if kind in {pcDir, pcLinkToDir} and existsFile(path / "ENV"):
+    for kind, path in walkDir(target / "share/nenv"):
+      if kind in {pcDir, pcLinkToDir} and splitFile(path).ext == ".env":
         echo splitPath(path).tail
   if args["run"]:
     var path = target / "share/worts" / $args["<env_name>"] / "ENV"

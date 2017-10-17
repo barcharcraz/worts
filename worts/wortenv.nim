@@ -21,3 +21,4 @@ p.env = @{
   "STOW_DIR": expandTilde("~/.worts/pkg")
 }
 pkg.add p
+export_package(pkg)

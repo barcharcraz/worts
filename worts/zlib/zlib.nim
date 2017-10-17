@@ -19,3 +19,5 @@ pkg.extract = proc(pkg: PkgInstall) =
     untar.extract(f, pkg.src_dir)
     for kind, path in walkDir(pkg.src_dir / $$"${pkg.name}-${pkg.ver}"):
         moveFile(path, pkg.src_dir / extractFilename(path))
+
+export_package(pkg)

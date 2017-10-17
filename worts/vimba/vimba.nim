@@ -1,4 +1,4 @@
-import nworts, os, ospaths, nakelib
+import nworts, os, ospaths
 
 var pkg* = newSeq[Pkg]()
 

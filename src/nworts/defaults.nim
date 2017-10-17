@@ -13,12 +13,12 @@ import strtabs
 import pkgenv
 import pkglayout
 
-proc shell(body: string) = 
+proc shell*(body: string) = 
    var result = execCmd(body)
    if result == QuitFailure:
     raise newException(SystemError, "command failed [" & body & "]")
 
-template withDir(dir: string, body: untyped) =
+template withDir*(dir: string, body: untyped) =
   var curdir = getCurrentDir()
   setCurrentDir(dir)
   body

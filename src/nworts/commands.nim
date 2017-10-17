@@ -10,15 +10,15 @@ import pkglayout
 import os
 import pkgexcept
 import terminal
-import commandeer
+
 import algorithm
-import parseopt2
 import pkgfmt
 import strutils
 import pkginit
 import semver
 import sequtils
-
+{.experimental.}
+when appType != "lib": import commandeer
 
 
 
@@ -120,12 +120,9 @@ template allow_multiple*(db: seq[Pkg]) =
 
 
 template export_package*(pkg_body: untyped) =
-    proc pkg*(): seq[Pkg] {.inject.} = 
+    proc nworts_pkg*(): seq[Pkg] {.exportc, inject.} =
         result = @[]
-        result.add(pkg_body) 
-    when appType == "lib":
-        proc nworts_pkg*(): seq[Pkg] {.exportc, inject.} =
-            result = pkg()
+        result.add(pkg_body)
     when appType == "console":
-        var packages = pkg()
+        var packages = nworts_pkg()
         allow_multiple(packages)

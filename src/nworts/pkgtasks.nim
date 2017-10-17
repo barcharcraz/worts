@@ -1,4 +1,5 @@
 import pkgtypes
+{.experimental.}
 #template download*(body: untyped) = 
 #    task("download", "download package sources or binaries from upstream", body)
 #template extract*(body: untyped) = 

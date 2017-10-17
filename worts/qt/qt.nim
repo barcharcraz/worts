@@ -1,4 +1,4 @@
-import nworts, os, strfmt, nakelib
+import nworts, os, strfmt, strutils
 const installScript = slurp("installscript.qs")
 var base* = initPkg()
 
