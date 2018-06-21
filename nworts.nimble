@@ -16,11 +16,3 @@ bin = @["tools/dumpmeta",
         "tools/nenv",
         "tools/lspkgs",
         "tools/nstow"]
-
-
-mkDir "builddir/tools"
-task tools, "build nworts tools":
-        withDir "builddir/tools":
-                exec fmt"nim c {thisDir()}/src/tools/nstow.nim "
-                exec fmt"nim c {thisDir()}/src/tools/lspkgs.nim"
-                exec fmt"nim c {thisDir()}/src/tools/nenv"
