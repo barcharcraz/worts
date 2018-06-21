@@ -1,4 +1,4 @@
-import nworts, semver, sequtils, strfmt, untar, os
+import nworts, semver, sequtils, strformat, untar, os
 const cache = slurp("CMakeCache.txt")
 var p = initPkg()
 p.name = "libarchive"
@@ -14,9 +14,9 @@ p.download = default_download
 p.extract = proc(pkg: PkgInstall) =
     # we use the untar library since we are buildidng bsdtar, so
     # we want an embedded extraction
-    var f = newTarFile($$"${pkg.download_dir}/${pkg.name}-${pkg.ver}.tar.gz")
+    var f = newTarFile(fmt"{pkg.download_dir}/{pkg.name}-{pkg.ver}.tar.gz")
     untar.extract(f, pkg.src_dir)
-    for kind, path in walkDir(pkg.src_dir / $$"${pkg.name}-${pkg.ver}"):
+    for kind, path in walkDir(pkg.src_dir / fmt"{pkg.name}-{pkg.ver}"):
         moveFile(path, pkg.src_dir / extractFilename(path))
 
 p.prepare = default_prepare

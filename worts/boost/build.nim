@@ -1,4 +1,5 @@
-import nworts, os, strfmt
+import nworts, os
+import strformat
 
 var base = initPkg()
 base.build_sys = pbsBoostBuild
@@ -20,7 +21,7 @@ lpkg.prepare = proc(pkg: PkgInstall) =
     shell("./bootstrap.sh")
 lpkg.install = proc(pkg: PkgInstall) =
   withDir(pkg.src_dir):
-    shell($$"""./b2 install --prefix="${pkg.pkg_dir}" """)
+    shell(fmt"""./b2 install --prefix="{pkg.pkg_dir}" """)
 
 var wpkg = base
 wpkg.platform = {ppWin32}
@@ -29,6 +30,8 @@ wpkg.prepare = proc(pkg: PkgInstall) =
     shell("bootstrap.bat")
 wpkg.install = proc(pkg: PkgInstall) =
   withDir(pkg.src_dir):
-    shell($$"""b2 install --prefix="${pkg.pkg_dir}" """)
+    shell(fmt"""b2 install --prefix="{pkg.pkg_dir}" """)
 
 var pkg* = [lpkg, wpkg]
+
+export_package(pkg)

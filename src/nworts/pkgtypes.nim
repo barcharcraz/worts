@@ -153,7 +153,7 @@ type
 
 
 
-macro `.`*(pkg: PkgInstall, field: string): untyped = 
+macro `.`*(pkg: PkgInstall, field: untyped): untyped = 
     ## ^ This makes PkgInstall types act like concatinations
     ##   of the Pkg, PkgVer and PkgLayout types
     var subfields = pkg.getType.last

@@ -13,9 +13,11 @@ import strtabs
 import pkgenv
 import pkglayout
 
+
 proc shell*(body: string) = 
-   var result = execCmd(body)
-   if result == QuitFailure:
+  echo(body)
+  var result = execCmd(body)
+  if result == QuitFailure:
     raise newException(SystemError, "command failed [" & body & "]")
 
 template withDir*(dir: string, body: untyped) =
@@ -44,11 +46,11 @@ proc cmake_prepare*(pkg: PkgInstall) =
 
 proc cmake_build*(pkg: PkgInstall) =
   withDir pkg.build_dir:
-    shell $$"cmake --build ."
+    shell "cmake --build ."
 
 proc cmake_install*(pkg: PkgInstall) =
   withDir pkg.build_dir:
-    shell $$"cmake --build . --target install"
+    shell "cmake --build . --target install"
 
 proc cmake_edit*(pkg: PkgInstall) =
   var exe = findExe("cmake-gui")
@@ -58,20 +60,20 @@ proc cmake_edit*(pkg: PkgInstall) =
 
 proc cmake_meta*(pkg: PkgInstall) =
   withDir pkg.build_dir:
-    shell $$"""cmake -G"Ninja" --system-information "${pkg.pkg_dir}/share/worts/${pkg.name}/BUILDINFO.cmake"  """
+    shell fmt"""cmake -G"Ninja" --system-information "{pkg.pkg_dir}/share/worts/${pkg.name}/BUILDINFO.cmake"  """
 
 proc meson_prepare*(pkg: PkgInstall) =
   withDir pkg.build_dir:
-    shell $$"""meson setup ${pkg.src_dir}"""
-    shell $$"""meson configure -Dprefix=${pkg.pkg_dir}"""
+    shell fmt"""meson setup {pkg.src_dir}"""
+    shell fmt"""meson configure -Dprefix={pkg.pkg_dir}"""
 
 proc meson_build*(pkg: PkgInstall) =
   withDir pkg.build_dir:
-    shell $$"""ninja"""
+    shell "ninja"
 
 proc meson_install*(pkg: PkgInstall) =
   withDir pkg.build_dir:
-    shell $$"""ninja install"""
+    shell "ninja install"
 
 proc boost_prepare*(pkg: PkgInstall) =
   var opts = pkg.options
@@ -90,12 +92,12 @@ proc boost_edit*(pkg: PkgInstall) =
 proc boost_build*(pkg: PkgInstall) =
   var opts = boost_readopts(readFile(pkg.build_dir / "boostopts.txt"))
   withDir pkg.src_dir:
-    shell($$"""b2  ${boost_writeopts(opts)} -j 8 stage """)
+    shell(fmt"""b2  {boost_writeopts(opts)} -j 8 stage """)
 
 proc boost_install*(pkg: PkgInstall) =
   withDir pkg.src_dir:
     var opts = boost_readopts(readFile(pkg.build_dir / "boostopts.txt"))
-    shell($$"""b2  ${boost_writeopts(opts)} -j 8 install""")
+    shell(fmt"""b2  {boost_writeopts(opts)} -j 8 install""")
 
 
 
@@ -105,7 +107,7 @@ proc default_download*(info: PkgInstall) =
   var checksum = ""
   if info.hash != "":
     checksum = "--check-integrity=true --checksum=" & info.hash
-  shell $$"""aria2c --allow-overwrite=true ${checksum} -d "${info.download_dir}" -o"${fname}" "${info.url}" """
+  shell fmt"""aria2c --allow-overwrite=true {checksum} -d "{info.download_dir}" -o"{fname}" "{info.url}" """
 
 
 proc default_extract*(info: PkgInstall) =
@@ -117,7 +119,7 @@ proc default_extract*(info: PkgInstall) =
     filename = tag[0].attrs["name"]
     echo "Extracted filename, ", filename, " from metalink"
 
-  shell $$"""bsdtar -C "${info.src_dir}" -xvf "${info.download_dir}/${filename}" """
+  shell fmt"""bsdtar -C "{info.src_dir}" -xvf "{info.download_dir}/{filename}" """
   var dirs = toSeq(walkDir(info.src_dir))
   if dirs.len == 1:
     echo "Moving directories"

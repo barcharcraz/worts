@@ -98,6 +98,7 @@ template allow_multiple*(db: seq[Pkg]) =
                 instinfo.pkg = pkg
                 instinfo.layout = layout(pkg, prefix)
                 createDirs(instinfo.layout)
+                echo(repr instinfo)
                 case task
                 of "all":
                     pkg.tasks.download(instinfo)
