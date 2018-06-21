@@ -1,5 +1,5 @@
 import pkgtypes
-import strfmt
+import strformat
 import osproc
 import semver
 import os
@@ -26,21 +26,21 @@ template withDir*(dir: string, body: untyped) =
 
 proc autotools_prepare*(pkg: PkgInstall) =
   withDir pkg.build_dir:
-    shell $$"sh ${pkg.src_dir}/configure --prefix=${pkg.pkg_dir}"
+    shell fmt"sh {pkg.src_dir}/configure --prefix={pkg.pkg_dir}"
 
 proc autotools_build*(pkg: PkgInstall) = 
   withDir pkg.build_dir:
-    shell $$"make"
+    shell "make"
 
 proc autotools_install*(pkg: PkgInstall) =
   withDir pkg.build_dir:
-    shell $$"make install"
+    shell "make install"
 
 
 proc cmake_prepare*(pkg: PkgInstall) =
   withDir pkg.build_dir:
     writeFile("CMakeCache.txt", cmake_writeopts(pkg.options))
-    shell $$"""cmake -G"Ninja" -DCMAKE_PREFIX_PATH="${basedir}/install" -DCMAKE_INSTALL_PREFIX="${pkg.pkg_dir}" "${pkg.src_dir}" """
+    shell fmt"""cmake -G"Ninja" -DCMAKE_PREFIX_PATH="{basedir}/install" -DCMAKE_INSTALL_PREFIX="{pkg.pkg_dir}" "{pkg.src_dir}" """
 
 proc cmake_build*(pkg: PkgInstall) =
   withDir pkg.build_dir:

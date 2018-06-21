@@ -10,7 +10,7 @@ is used to make package development easier.
 
 # versioning
 
-By default the latest version fo a package is installed, 
+By default the latest version of a package is installed, 
 we keep records of the release and hash of old versions though. To account for fixed bugs or
 build system changes we use a matching scheme agains the `PkgVer` structure. This allows
 seperating recipies for different systems, arch, or versions. This is also very nice for windows
