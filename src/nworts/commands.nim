@@ -121,9 +121,15 @@ template allow_multiple*(db: seq[Pkg]) =
 
 
 template export_package*(pkg_body: untyped) =
-    proc nworts_pkg*(): seq[Pkg] {.exportc, inject.} =
-        result = @[]
-        result.add(pkg_body)
+    when defined(plugin):
+        proc nworts_pkg*(): seq[Pkg] {.exportc, inject.} =
+            result = @[]
+            result.add(pkg_body)
+    else:
+        proc nworts_pkg*(): seq[Pkg] {.inject.} =
+            result = @[]
+            result.add(pkg_body)
+
     when appType == "console":
         var packages = nworts_pkg()
         allow_multiple(packages)

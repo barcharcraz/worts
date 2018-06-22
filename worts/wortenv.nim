@@ -2,6 +2,10 @@ import nworts, os, ospaths
 var p = initPkg()
 p.name = "WortEnv"
 p.license = "GPLv3"
+p.desc = """
+General sane default environment file to use packages
+installed with worts
+"""
 p.ver = "1.0"
 p.tasks = PkgTasks()
 p.platform = {ppLinux, ppBsd, ppDarwin}

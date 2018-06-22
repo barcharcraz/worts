@@ -31,3 +31,5 @@ p.url = "https://www.libarchive.org/downloads/libarchive-3.3.2.tar.gz"
 p.hash = "sha-256=ED2DBD6954792B2C054CCF8EC4B330A54B85904A80CEF477A1C74643DDAFA0CE"
 
 pkg.add p
+
+export_package(pkg)

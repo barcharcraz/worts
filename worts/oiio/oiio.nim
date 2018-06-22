@@ -10,3 +10,5 @@ pkg.back.options = cmake_genopts(cache)
 pkg.back.ver = "1.7.16"
 pkg.back.url = "https://github.com/OpenImageIO/oiio/archive/Release-1.7.16.tar.gz"
 pkg.back.build_sys = pbsCmake
+
+export_package(pkg)
