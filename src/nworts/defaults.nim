@@ -4,6 +4,7 @@ import osproc
 import semver
 import os
 import sequtils
+import strutils
 import uri
 import pkgopts
 import xmltree
@@ -18,6 +19,7 @@ import pkglayout
 proc shell*(body: string) = 
   echo(body)
   var result = execCmd(body)
+  echo result
   if result == QuitFailure:
     raise newException(SystemError, "command failed [" & body & "]")
 
@@ -42,6 +44,7 @@ proc autotools_install*(pkg: PkgInstall) =
 
 proc cmake_prepare*(pkg: PkgInstall) =
   withDir pkg.build_dir:
+  
     writeFile("CMakeCache.txt", cmake_writeopts(pkg.options))
     shell fmt"""cmake -G"Ninja" -DCMAKE_PREFIX_PATH="{basedir}/install" -DCMAKE_INSTALL_PREFIX="{pkg.pkg_dir}" "{pkg.src_dir}" """
 
@@ -64,9 +67,10 @@ proc cmake_meta*(pkg: PkgInstall) =
     shell fmt"""cmake -G"Ninja" --system-information "{pkg.pkg_dir}/share/worts/{pkg.name}/BUILDINFO.cmake"  """
 
 proc meson_prepare*(pkg: PkgInstall) =
+  var opts = pkg.options.map do (it: PkgOption) -> string:
+    "-D" & it.name & "=" & it.value
   withDir pkg.build_dir:
-    shell fmt"""meson setup {pkg.src_dir}"""
-    shell fmt"""meson configure -Dprefix={pkg.pkg_dir}"""
+    shell fmt"""meson setup -Dprefix={pkg.pkg_dir} {pkg.src_dir} {opts.join(" ")} """
 
 proc meson_build*(pkg: PkgInstall) =
   withDir pkg.build_dir:
@@ -78,10 +82,10 @@ proc meson_install*(pkg: PkgInstall) =
 
 proc meson_meta*(pkg: PkgInstall) =
   withDir pkg.build_dir:
-    var buildopts = execProcess("meson", ["introspect", "--buildoptions"]).parseJson
-    var deps = execProcess("meson", ["introspect", "--dependencies"]).parseJson
+    var buildopts = execProcess("meson introspect --buildoptions").parseJson
+    var deps = execProcess("meson introspect --dependencies").parseJson
     var buildinfo = %*{"buildoptions": buildopts, "dependencies": deps}
-    writeFile(fmt"{pkg.pkg_dir}/share/worts/{pkg.name}/BUILDINFO.json", $buildinfo)
+    writeFile(fmt"{pkg.pkg_dir}/share/worts/{pkg.name}/BUILDINFO.json", buildinfo.pretty)
 
 
 proc boost_prepare*(pkg: PkgInstall) =

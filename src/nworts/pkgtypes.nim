@@ -6,7 +6,6 @@ import uri
 import options
 import strutils
 
-
 type PkgOption* = tuple
     name: string
     value: string
@@ -95,6 +94,18 @@ type PkgBuildSystem* {.size: 4.} = enum
     pbsChocolatey,
     pbsUnknown
 
+type PkgOptLevel* {.size: 4.} = enum
+    polNone,
+    polSize,
+    polSpeed,
+    polMax
+
+type PkgLibType* {.size: 4.} = enum
+    pltShared,
+    pltStatic,
+    pltBoth,
+    pltNone
+
 
 type PkgCompilers* = object
     cc*: PkgCCompiler
@@ -110,6 +121,7 @@ type PkgLayout* = object
     build_dir*: string ## the directory for build files
     download_dir*: string ## the directory for downloads
     src_dir*: string ## the directory where source should be extracted
+    meta_dir*: string ## the directory for metadata information
 
 
 type PkgTarget* = object

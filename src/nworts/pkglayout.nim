@@ -16,6 +16,7 @@ proc layout*(pkg: Pkg, prefix: string = basedir): PkgLayout =
     result.build_dir = blddir / pkgid / "build"
     result.src_dir = blddir / pkgid / "source"
     result.download_dir = basedir / "downloads"
+    result.meta_dir = result.pkg_dir / fmt"share/worts/{pkg.name}"
 
 
 proc createDirs*(layout: PkgLayout) = 
@@ -23,6 +24,7 @@ proc createDirs*(layout: PkgLayout) =
     createDir layout.pkg_dir
     createDir layout.download_dir
     createDir layout.src_dir
+    createDir layout.meta_dir
 
 proc deleteDirs*(layout: PkgLayout) = 
     removeDir layout.build_dir

@@ -42,6 +42,7 @@ proc boost_writeopts*(options: PkgOptions): string =
         else: optstrings.add(opt.name)
     result = optstrings.join(" ")
 
+
 proc cmake_genopts*(cache: string): PkgOptions =
     ## ^ This generates options from a cmake cache file
     ## thus should contain both data types and names
@@ -73,11 +74,18 @@ proc cmake_readmeta*(meta: string): PkgOptions =
     var cache = meta[startidx+len(cachestart)..endidx]
     result = cmake_genopts(cache)
 
-
-proc meson_genopts*(builddir: string): PkgOptions =
+proc meson_defaultopts*(): PkgOptions =
+    result = @[]
+proc meson_readopts*(builddir: string): PkgOptions =
     var meson_output = execProcess("meson", [builddir, "introspect", "--buildoptions"])
     var json_out = parseJson(meson_output)
     echo json_out
 
+#[[
 proc meson_guessopts*(meson_options: string): PkgOptions =
     ## Reads meson_options.txt and outputs a possible set of package options
+    var opts = readFile(meson_options)
+    let regex = re"(*ANYCRLF)(?m)(?s)option\((?<body>.+?)\)"
+    for match in opts.findIter(regex):
+        var body = match.captures["body"]
+]]#

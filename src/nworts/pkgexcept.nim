@@ -6,3 +6,4 @@ type PackageNotFoundException* = object of Exception
 type PackageNotUniqueException* = object of Exception
 type PackageTypeNotSupportedException* = object of Exception
 type ArchError* = object of Exception
+type BuildStepError* = object of Exception
