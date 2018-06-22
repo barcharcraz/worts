@@ -10,4 +10,4 @@ pkg.url = "https://github.com/GNOME/glib/archive/2.54.0.tar.gz"
 
 
 
-export_package @[pkg]
+export_package(pkg)
