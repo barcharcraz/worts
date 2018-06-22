@@ -10,6 +10,7 @@ import xmltree
 import xmlparser
 import pkgexcept
 import strtabs
+import json
 import pkgenv
 import pkglayout
 
@@ -60,7 +61,7 @@ proc cmake_edit*(pkg: PkgInstall) =
 
 proc cmake_meta*(pkg: PkgInstall) =
   withDir pkg.build_dir:
-    shell fmt"""cmake -G"Ninja" --system-information "{pkg.pkg_dir}/share/worts/${pkg.name}/BUILDINFO.cmake"  """
+    shell fmt"""cmake -G"Ninja" --system-information "{pkg.pkg_dir}/share/worts/{pkg.name}/BUILDINFO.cmake"  """
 
 proc meson_prepare*(pkg: PkgInstall) =
   withDir pkg.build_dir:
@@ -74,6 +75,14 @@ proc meson_build*(pkg: PkgInstall) =
 proc meson_install*(pkg: PkgInstall) =
   withDir pkg.build_dir:
     shell "ninja install"
+
+proc meson_meta*(pkg: PkgInstall) =
+  withDir pkg.build_dir:
+    var buildopts = execProcess("meson", ["introspect", "--buildoptions"]).parseJson
+    var deps = execProcess("meson", ["introspect", "--dependencies"]).parseJson
+    var buildinfo = %*{"buildoptions": buildopts, "dependencies": deps}
+    writeFile(fmt"{pkg.pkg_dir}/share/worts/{pkg.name}/BUILDINFO.json", $buildinfo)
+
 
 proc boost_prepare*(pkg: PkgInstall) =
   var opts = pkg.options
@@ -172,6 +181,7 @@ proc default_meta*(pkg: PkgInstall) =
   case pkg.build_sys
   of pbsNone: discard
   of pbsCmake: pkg.cmake_meta
+  of pbsMeson: pkg.meson_meta
   else:
     raise newException(BuildSystemUnsupportedException, "")
 

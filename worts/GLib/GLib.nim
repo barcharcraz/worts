@@ -1,4 +1,4 @@
-import semver,nworts,sequtils,os,strfmt
+import semver,nworts,sequtils,os
 var pkg = initPkg()
 pkg.name = "glib"
 pkg.license = "GPLv3"

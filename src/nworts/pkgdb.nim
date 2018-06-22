@@ -10,7 +10,7 @@ import os
 import pkginit
 import strutils
 import pkgfmt
-import sugar
+import future
 
 var default_db*: seq[Pkg] = @[]
 

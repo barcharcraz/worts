@@ -1,5 +1,4 @@
 # Package
-import strformat
 version       = "0.1.0"
 author        = "Charles Barto"
 description   = "ports with nim"

@@ -30,15 +30,14 @@ BUILD_TESTING:BOOL=OFF
         var idx = opts.find("CMAKE_BUILD_TYPE")
         check(idx != -1)
         var opt = opts[idx]
-        check(opt.typ == "STRING")
-        check(opt.default == "Release")
+        echo repr(opt)
+        check(opt.name == "CMAKE_BUILD_TYPE")
         check(opt.value == "Release")
     test "has BuildTesting":
         var opts = cmake_genopts(cmakeopts)
         var idx = opts.find("BUILD_TESTING")
         check(idx != -1)
         var opt = opts[idx]
-        check(opt.typ == "BOOL")
-        check(opt.default == "OFF")
+        check(opt.name == "BUILD_TESTING")
         check(opt.value == "OFF")
 

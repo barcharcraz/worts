@@ -4,7 +4,9 @@ import nre
 import logging
 import strformat
 import strutils
+import json
 import pkglayout
+import osproc
 import pkgtypes
 
 proc default*(self: PkgOption): string = self.default
@@ -71,3 +73,11 @@ proc cmake_readmeta*(meta: string): PkgOptions =
     var cache = meta[startidx+len(cachestart)..endidx]
     result = cmake_genopts(cache)
 
+
+proc meson_genopts*(builddir: string): PkgOptions =
+    var meson_output = execProcess("meson", [builddir, "introspect", "--buildoptions"])
+    var json_out = parseJson(meson_output)
+    echo json_out
+
+proc meson_guessopts*(meson_options: string): PkgOptions =
+    ## Reads meson_options.txt and outputs a possible set of package options
