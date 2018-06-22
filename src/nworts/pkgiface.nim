@@ -1,5 +1,4 @@
 ## package interface types and conversion functions
-
 type CPkg* {.exportc: "nworts_pkg".} = object
     name: cstring
     ver: cstring

@@ -4,6 +4,6 @@ import sequtils
 import os
 
 proc writeEnvFile*(pkg: PkgInstall) =
-  var lines = pkg.env.map do (v: PkgEnvVar) -> string: v.name & "=" & v.value
+  var lines = pkg.pkg.env.map do (v: PkgEnvVar) -> string: v.name & "=" & v.value
   createDir(pkg.pkg_dir / "share" / "nenv")
   writeFile(pkg.pkg_dir / "share" / "nenv" / pkg.name & ".env", lines.join("\n"))

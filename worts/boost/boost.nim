@@ -1,4 +1,4 @@
-import nworts, os, strfmt, strutils
+import nworts, os, strutils
 
 var pkg*: seq[Pkg] = @[]
 const components = @[
@@ -48,3 +48,9 @@ for comp in components:
 pkg.add pkg[^1]
 pkg[^1].ver = "1.65.0"
 pkg[^1].url = "https://dl.bintray.com/boostorg/release/1.65.0/source/boost_1_65_0.tar.gz"
+
+pkg.add pkg[^1]
+pkg.back.ver = "1.67.0"
+pkg[^1].url = "https://dl.bintray.com/boostorg/release/1.67.0/source/boost_1_67_0.tar.gz"
+
+export_package(pkg)

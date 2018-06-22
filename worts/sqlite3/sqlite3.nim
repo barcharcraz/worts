@@ -2,7 +2,6 @@ import nworts
 import semver
 import sequtils
 import os
-import strfmt
 
 var pkg* = newSeq[Pkg]()
 pkg.add initPkg()
@@ -23,3 +22,5 @@ pkg.add pkg[^1]
 pkg.back.ver = "3.20.1"
 pkg.back.url = "https://www.sqlite.org/2017/sqlite-amalgamation-3200100.zip"
 pkg.back.hash = "sha1=e9dc46fc55a512b5d2ef97fd548b7ab4beb2d3e3"
+
+export_package(pkg)

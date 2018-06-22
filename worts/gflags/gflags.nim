@@ -1,4 +1,4 @@
-import nworts, os, strfmt, strutils
+import nworts, os, strutils
 var p = initPkg()
 p.name = "gflags"
 p.desc = "Google Flags"

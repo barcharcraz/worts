@@ -98,4 +98,4 @@ p.install:
 p.env = @{
   "GENICAM_GENTL32_PATH": "/lib/vimba"
 }
-allow_multiple pkg
+export_package(pkg)

@@ -2,7 +2,7 @@
 ## and may need to be manual to deal with (for example) makesfiles
 import nre
 import logging
-import strfmt
+import strformat
 import strutils
 import pkglayout
 import pkgtypes
@@ -47,7 +47,7 @@ proc cmake_genopts*(cache: string): PkgOptions =
     result = @[]
     for match in cache.findIter(opt):
         var caps = match.captures()
-        info("adding option {} of type {} with default {}".fmt(caps[0], caps[1], caps[2]))
+        info("adding option {} of type {} with default {}".format(caps[0], caps[1], caps[2]))
         var option = (caps[0], caps[2])
         result.add(option)
 

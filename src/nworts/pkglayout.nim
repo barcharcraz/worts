@@ -1,7 +1,7 @@
 import pkgtypes
 import ospaths
 import os
-import strfmt
+import strformat
 when defined(packager):
     var basedir* = getCurrentDir()
 else:
@@ -11,7 +11,7 @@ else:
 proc layout*(pkg: Pkg, prefix: string = basedir): PkgLayout =
     var pkgdir = basedir / "pkg"
     var blddir = basedir / "bld"
-    var pkgid = $$"${pkg.name}-${pkg.ver}-${pkg.rel}"
+    var pkgid = fmt"{pkg.name}-{pkg.ver}-{pkg.rel}"
     result.pkg_dir = pkgdir / pkgid
     result.build_dir = blddir / pkgid / "build"
     result.src_dir = blddir / pkgid / "source"
