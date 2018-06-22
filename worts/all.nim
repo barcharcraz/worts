@@ -20,19 +20,19 @@ import wortenv
 
 
 var db: seq[Pkg] = @[]
-db.add wortenv.pkg
-db.add qt.pkg
-db.add spdlog.pkg
-db.add fmt.pkg
-db.add libarchive.pkg
-db.add libtiff.pkg
-db.add sqlite3.pkg
-db.add zlib.pkg
-db.add build.pkg
-db.add boost.pkg
-db.add gflags.pkg()
-db.add yaml_cpp.pkg
-db.add libelektra.pkg
-db.add oiio.pkg
-db.add vimba.pkg
+db.add wortenv.nworts_pkg()
+db.add qt.nworts_pkg()
+db.add spdlog.nworts_pkg()
+db.add fmt.nworts_pkg()
+db.add libarchive.nworts_pkg()
+db.add libtiff.nworts_pkg()
+db.add sqlite3.nworts_pkg()
+db.add zlib.nworts_pkg()
+db.add build.nworts_pkg()
+db.add boost.nworts_pkg()
+db.add gflags.nworts_pkg()
+db.add yaml_cpp.nworts_pkg()
+db.add libelektra.nworts_pkg()
+db.add oiio.nworts_pkg()
+db.add vimba.nworts_pkg()
 allow_multiple db

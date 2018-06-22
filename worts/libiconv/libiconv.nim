@@ -1,7 +1,7 @@
 import nworts
 import semver
 import sequtils
-import strfmt
+import strformat
 var pkg = initPkg()
 pkg.name = "libiconv"
 pkg.license = "GPL/LGPL"
