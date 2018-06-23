@@ -6,4 +6,4 @@ import pkginit
 proc initPkgFrom(cfg: Config): Pkg =
     result = initPkg()
     var pkgDict = cfg["pkg"]
-    
+    result.ver = pkgDict
