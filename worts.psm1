@@ -6,20 +6,44 @@
 # This improves performance of command discovery in PowerShell.
 Set-StrictMode -Version Latest
 
-function Use-DefaultWortVariables {
-    param(
-        [string]$name = $(Get-Variable  -Name name -ValueOnly),
-        [semver]$version = $(Get-Variable  -Name ver -ValueOnly)
-    )
-    #echo $PSScriptRoot
-    Set-Variable -Name base -Value $(Join-Path $PSScriptRoot "prefix")
-    Set-Variable -Name download_dir -Value $(Join-Path $base "download")
-    Set-Variable -Name pkg_base -Value $(Join-Path $base "$name-$version")
-    Set-Variable -Name src_dir -Value $(Join-Path $pkg_base "src")
-    Set-Variable -Name build_dir -Value $(Join-Path $pkg_base "build")
-    Set-Variable -Name install_dir -Value $(Join-Path $base "install")
+
+class Source {
+    [string]$url
+    [string]$filename
+    [string]$sha256
 }
 
+class Package {
+    [string]$name
+    [semver]$version
+    []
+}
+function Initialize-WortPackage {
+    param(
+        [string]$Name = $Name,
+        [semver]$Version = $Version
+    )
+    #echo $PSScriptRoot
+    $name = $Name
+    $version = $Version
+    $base = $(Join-Path $PSScriptRoot "prefix")
+    $download_dir = $(Join-Path $base "download")
+    $download = $(Join-Path $download_dir / "$Name-$Version")
+    $pkg_base = $(Join-Path $base "$name-$version")
+    $src_dir = $(Join-Path $pkg_base "src")
+    $build_dir = $(Join-Path $pkg_base "build")
+    $install_dir = $(Join-Path $base "install")
 
-Export-ModuleMember -Function *-*
+}
+function curl_download($filename, $url) {
+    # avoid calling the iwr alias
+    $curl = Get-Command -CommandType Application -Name curl
+    & $curl -L --progress-bar -o $filename $url
+}
+function Use-DefaultDownload {
+    function download {
+        script:curl_download $download_dir $url
+    }
+
+}
 
