@@ -4,20 +4,9 @@
 # Export only the functions using PowerShell standard verb-noun naming.
 # Be sure to list each exported functions in the FunctionsToExport field of the module manifest file.
 # This improves performance of command discovery in PowerShell.
+using module '.\lib\types.psm1'
 Set-StrictMode -Version Latest
 
-
-class Source {
-    [string]$url
-    [string]$filename
-    [string]$sha256
-}
-
-class Package {
-    [string]$name
-    [semver]$version
-    []
-}
 function Initialize-WortPackage {
     param(
         [string]$Name = $Name,
@@ -46,4 +35,6 @@ function Use-DefaultDownload {
     }
 
 }
+
+
 
